@@ -1,0 +1,28 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`d2l-my-dashboards-ui`
+@demo demo/index.html
+-->
+
+<dom-module id="d2l-my-dashboards">
+	<template strip-whitespace>
+		<style>
+			:host {
+				display: inline-block;
+			}
+		</style>
+		<h2>Hello [[prop1]]!</h2>
+	</template>
+	<script>
+		Polymer({
+			is: 'd2l-my-dashboards',
+			properties: {
+				prop1: {
+					type: String,
+					value: 'd2l-my-dashboards',
+				}
+			}
+		});
+	</script>
+</dom-module>
