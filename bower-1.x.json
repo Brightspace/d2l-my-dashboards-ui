@@ -1,7 +1,7 @@
 {
-  "name": "d2l-my-dashboards-ui",
+  "name": "d2l-my-dashboards",
   "description": "",
-  "main": "d2l-my-dashboards-ui.html",
+  "main": "d2l-my-dashboards.html",
   "license": "Apache-2.0",
   "ignore": [
     "demo",
@@ -19,6 +19,10 @@
     "polymer": "Polymer/polymer#^1.0.0"
   },
   "devDependencies": {
+    "d2l-dropdown": "^6.1.0",
+    "d2l-fetch": "Brightspace/d2l-fetch#^1.8.0",
+    "d2l-menu": "^1.0.4",
+    "d2l-tile": "^3.0.9",
     "d2l-typography": "BrightspaceUI/typography#^6.0.0",
     "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
