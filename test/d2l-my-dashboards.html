@@ -6,6 +6,7 @@
 		<title>d2l-my-dashboards test</title>
 
 		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+		<script src="../../lie/dist/lie.polyfill.min.js"></script>
 		<script src="../../web-component-tester/browser.js"></script>
 		<link rel="import" href="../d2l-my-dashboards.html">
 	</head>
@@ -35,9 +36,9 @@
 				};
 
 				let element;
-				setup(function() {
+				setup(function(done) {
 					element = fixture('d2l-my-dashboards-fixture');
-
+					flush(done);
 				});
 
 				test('instantiating the element works', function() {
