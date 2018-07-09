@@ -13,7 +13,7 @@
 	<body>
 		<test-fixture id="d2l-my-dashboards-fixture">
 			<template>
-				<d2l-my-dashboards></d2l-my-dashboards>
+				<d2l-my-dashboards dashboards-url="/testGetDashboards"></d2l-my-dashboards>
 			</template>
 		</test-fixture>
 		<script>
@@ -22,21 +22,27 @@
 					{ imgUrl: 'Image1', name: 'Name1' },
 					{ imgUrl: 'Image2', name: 'Name2' }
 				];
-				window.d2lfetch = {
-					fetch: function() {
-						return Promise.resolve({
-							ok: true,
-							json: function() {
+
+				function mockD2lFetch(path, response) {
+					window.d2lfetch = {
+						fetch: function(req) {
+							if (req === path) {
 								return Promise.resolve({
-									value: mockData
+									ok: true,
+									json: function() {
+										return Promise.resolve(response);
+									}
 								});
 							}
-						});
-					}
-				};
+							return Promise.reject(`Route ${req} mocked`);
+						}
+					};
+				}
 
 				let element;
 				setup(function(done) {
+					mockD2lFetch('/testGetDashboards', { value: mockData });
+
 					element = fixture('d2l-my-dashboards-fixture');
 					flush(done);
 				});
