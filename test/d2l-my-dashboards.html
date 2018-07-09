@@ -47,9 +47,7 @@
 
 				test('after fetching dashboards, the correct number of image tiles are displayed', function(done) {
 					element._fetchDashboards().then(function() {
-						const innerRoot = element.shadowRoot ? element.shadowRoot : element;
-						const d2lImageTiles = innerRoot.querySelectorAll('d2l-image-tile');
-
+						const d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-image-tile');
 						assert.equal(d2lImageTiles.length, mockData.length);
 						done();
 					});
