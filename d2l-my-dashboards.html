@@ -15,9 +15,9 @@
 		<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]'>
 
 			<d2l-image-tile
-				class='test'
+				href="[[item.link]]"
 				img-url='[[item.imgUrl]]'
-				dropdown-label='This is my menu'
+				dropdown-label='Options'
 				hover-effect='emphasize-image lower-menu'
 			>
 			<d2l-dropdown-menu slot='d2l-image-tile-dropdown'>
