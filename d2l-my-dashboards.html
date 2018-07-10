@@ -8,30 +8,61 @@
 <dom-module id='d2l-my-dashboards'>
 	<template strip-whitespace>
 		<style>
-			:host {
-				display: inline-block;
+			.dashboards-tile-grid {
+				display: -ms-grid;
+				display: grid;
+				grid-column-gap: 15px;
+			}
+			.dashboards-tile-grid.columns-3 {
+				grid-template-columns: repeat(3, 1fr);
+				-ms-grid-columns: 1fr 15px 1fr 15px 1fr;
+			}
+			.dashboard-text {
+				margin-top: 0.6rem;
+				float: left;
+				flex: 1;
+				overflow: hidden;
+				word-wrap: break-word; /* IE/Edge */
+				overflow-wrap: break-word; /* replaces 'word-wrap' in Firefox, Chrome, Safari */
+			}
+			d2l-image-tile:hover .dashboard-text {
+				text-decoration: underline;
+			}
+			.dashboard-tile d2l-image-tile {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			d2l-image-tile {
+				--d2l-image-tile-image-height: 100px;
+				border-color: transparent;
 			}
 		</style>
-		<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]'>
+		<div class="dashboards-tile-grid columns-3">
+			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]'>
+				<div class="dashboard-tile">
+					<d2l-image-tile
+						href="[[item.link]]"
+						img-url='[[item.imgUrl]]'
+						dropdown-label='Options'
+						hover-effect='emphasize-image lower-menu'
+					>
+						<d2l-dropdown-menu slot='d2l-image-tile-dropdown'>
+							<d2l-menu label='Options'>
+								<d2l-menu-item
+									text='Change Display Name'
+									on-d2l-menu-item-select='_changeDisplayName' />
+							</d2l-menu>
+						</d2l-dropdown-menu>
 
-			<d2l-image-tile
-				href="[[item.link]]"
-				img-url='[[item.imgUrl]]'
-				dropdown-label='Options'
-				hover-effect='emphasize-image lower-menu'
-			>
-			<d2l-dropdown-menu slot='d2l-image-tile-dropdown'>
-				<d2l-menu label='Options'>
-					<d2l-menu-item
-						text='Change Display Name'
-						on-d2l-menu-item-select='_changeDisplayName' />
-				</d2l-menu>
-			</d2l-dropdown-menu>
+						<div class="dashboard-text">
+							[[item.name]]
+						</div>
+					</d2l-image-tile>
+				</div>
+			</template>
+	</div>
 
-				<p>[[item.name]]</p>
-			</d2l-image-tile>
-
-		</template>
 	</template>
 	<script>
 		Polymer({
