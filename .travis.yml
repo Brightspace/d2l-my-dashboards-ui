@@ -1,12 +1,17 @@
 language: node_js
-node_js:
-- 9
+node_js: node
 script:
 - npm run lint
-- npm run test:polymer:sauce
+- |
+  if [ $TRAVIS_PULL_REQUEST != false ] && [ $TRAVIS_SECURE_ENV_VARS == true ]; then
+    echo "Pull request with secure environment variables, running Sauce tests...";
+    npm run test:polymer:sauce || travis_terminate 1;
+  else
+    echo "Not a pull request and/or no secure environment variables, running headless tests...";
+    npm run test:polymer:local || travis_terminate 1;
+  fi
 addons:
-  jwt:
-    secure: ZQBYlWsBEcVRaELtWWaUi9ouZaRdc+GqyBDHmv+H/IlnGinMJLcUD0tRfFD3n5pVvDVuRXGaHMw7kaF0CM0bd4BJGqV2aWL+erBkMGjEDdIcqxFgqDMzdgGgdDyl+dYhPIAPPUe3L2sPffXcIrAwYmW66iOgkInJiExggqViTaY=
+  chrome: stable
 env:
   global:
   # SAUCE_USERNAME
