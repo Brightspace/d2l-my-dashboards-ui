@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "d2l-dropdown": "^6.1.0",
-    "d2l-fetch": "Brightspace/d2l-fetch#^1.8.0",
+    "d2l-fetch-siren-entity-behavior": "Brightspace/d2l-fetch-siren-entity-behavior#^5.0.2",
     "d2l-menu": "^1.0.4",
     "d2l-tile": "^3.0.9",
     "d2l-typography": "BrightspaceUI/typography#^6.0.0",
@@ -29,6 +29,7 @@
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
     "iron-test-helpers": "PolymerElements/iron-test-helpers#^2.0.0",
     "lie": "^3.3.0",
+    "siren-parser-import": "Brightspace/siren-parser-import#^7.0.0",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0"
   },
   "variants": {

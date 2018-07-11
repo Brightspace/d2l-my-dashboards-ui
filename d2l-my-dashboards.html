@@ -1,9 +1,9 @@
 <link rel='import' href='../polymer/polymer.html'>
-<link rel="import" href="../d2l-fetch/d2l-fetch.html">
 <link rel='import' href='../d2l-menu/d2l-menu.html'>
 <link rel='import' href='../d2l-dropdown/d2l-dropdown-menu.html'>
 <link rel='import' href='../d2l-menu/d2l-menu-item.html'>
 <link rel='import' href='../d2l-tile/d2l-image-tile.html'>
+<link rel="import" href="../d2l-fetch-siren-entity-behavior/d2l-fetch-siren-entity-behavior.html">
 
 <dom-module id='d2l-my-dashboards'>
 	<template strip-whitespace>
@@ -80,20 +80,29 @@
 					this._styleTilesForMs();
 				});
 			},
+			behaviors: [
+				D2L.PolymerBehaviors.FetchSirenEntityBehavior
+			],
 			ready: function() {
 				this._fetchDashboards();
 			},
 			_fetchDashboards: function() {
-				return window.d2lfetch
-					.fetch(this.dashboardsUrl)
-					.then(function(response) {
-						if (response.ok) {
-							return response.json();
-						}
-						return Promise.reject(response.status + response.statusText);
-					})
+				return this._fetchEntity(this.dashboardsUrl)
 					.then(function(data) {
-						this._dashboards = data.value;
+						var getDashboardEntities = data._entitiesByRel['https://api.brightspace.com/rels/analytics-dashboards'].map(function(e) {
+							return this._fetchEntity(e.href);
+						}.bind(this));
+						return Promise.all(getDashboardEntities);
+					}.bind(this))
+					.then(function(dashboardEntities) {
+						var dashboards = dashboardEntities.map(function(dashboardEntity) {
+							return {
+								link: dashboardEntity.properties.link,
+								name: dashboardEntity.properties.name,
+								imgUrl: dashboardEntity._entitiesByRel['https://api.brightspace.com/rels/analytics-dashboard-image'][0].href
+							};
+						});
+						this.set('_dashboards', dashboards);
 					}.bind(this));
 			},
 			_changeDisplayName: function() {
