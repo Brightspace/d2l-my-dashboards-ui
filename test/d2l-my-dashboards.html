@@ -4,21 +4,59 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 		<title>d2l-my-dashboards test</title>
+
 		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+		<script src="../../lie/dist/lie.polyfill.min.js"></script>
 		<script src="../../web-component-tester/browser.js"></script>
 		<link rel="import" href="../d2l-my-dashboards.html">
 	</head>
 	<body>
-		<test-fixture id="basic">
+		<test-fixture id="d2l-my-dashboards-fixture">
 			<template>
-				<d2l-my-dashboards></d2l-my-dashboards>
+				<d2l-my-dashboards dashboards-url="/testGetDashboards"></d2l-my-dashboards>
 			</template>
 		</test-fixture>
 		<script>
 			suite('d2l-my-dashboards', function() {
+				const mockData = [
+					{ imgUrl: 'Image1', name: 'Name1' },
+					{ imgUrl: 'Image2', name: 'Name2' }
+				];
+
+				function mockD2lFetch(path, response) {
+					window.d2lfetch = {
+						fetch: function(req) {
+							if (req === path) {
+								return Promise.resolve({
+									ok: true,
+									json: function() {
+										return Promise.resolve(response);
+									}
+								});
+							}
+							return Promise.reject(`Route ${req} mocked`);
+						}
+					};
+				}
+
+				let element;
+				setup(function(done) {
+					mockD2lFetch('/testGetDashboards', { value: mockData });
+
+					element = fixture('d2l-my-dashboards-fixture');
+					flush(done);
+				});
+
 				test('instantiating the element works', function() {
-					var element = fixture('basic');
 					assert.equal(element.is, 'd2l-my-dashboards');
+				});
+
+				test('after fetching dashboards, the correct number of image tiles are displayed', function(done) {
+					element._fetchDashboards().then(function() {
+						const d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-image-tile');
+						assert.equal(d2lImageTiles.length, mockData.length);
+						done();
+					});
 				});
 			});
 		</script>

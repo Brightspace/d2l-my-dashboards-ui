@@ -1,27 +1,66 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel='import' href='../polymer/polymer.html'>
+<link rel="import" href="../d2l-fetch/d2l-fetch.html">
+<link rel='import' href='../d2l-menu/d2l-menu.html'>
+<link rel='import' href='../d2l-dropdown/d2l-dropdown-menu.html'>
+<link rel='import' href='../d2l-menu/d2l-menu-item.html'>
+<link rel='import' href='../d2l-tile/d2l-image-tile.html'>
 
-<!--
-`d2l-my-dashboards-ui`
-@demo demo/index.html
--->
-
-<dom-module id="d2l-my-dashboards">
+<dom-module id='d2l-my-dashboards'>
 	<template strip-whitespace>
 		<style>
 			:host {
 				display: inline-block;
 			}
 		</style>
-		<h2>Hello [[prop1]]!</h2>
+		<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]'>
+
+			<d2l-image-tile
+				href="[[item.link]]"
+				img-url='[[item.imgUrl]]'
+				dropdown-label='Options'
+				hover-effect='emphasize-image lower-menu'
+			>
+			<d2l-dropdown-menu slot='d2l-image-tile-dropdown'>
+				<d2l-menu label='Options'>
+					<d2l-menu-item
+						text='Change Display Name'
+						on-d2l-menu-item-select='_changeDisplayName' />
+				</d2l-menu>
+			</d2l-dropdown-menu>
+
+				<p>[[item.name]]</p>
+			</d2l-image-tile>
+
+		</template>
 	</template>
 	<script>
 		Polymer({
 			is: 'd2l-my-dashboards',
 			properties: {
-				prop1: {
-					type: String,
-					value: 'd2l-my-dashboards',
+				_dashboards: {
+					type: Array
+				},
+				dashboardsUrl: {
+					type: String
 				}
+			},
+			ready: function() {
+				this._fetchDashboards();
+			},
+			_fetchDashboards: function() {
+				return window.d2lfetch
+					.fetch(this.dashboardsUrl)
+					.then(function(response) {
+						if (response.ok) {
+							return response.json();
+						}
+						return Promise.reject(response.status + response.statusText);
+					})
+					.then(function(data) {
+						this._dashboards = data.value;
+					}.bind(this));
+			},
+			_changeDisplayName: function() {
 			}
 		});
 	</script>
