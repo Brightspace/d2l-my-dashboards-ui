@@ -75,6 +75,11 @@
 					type: String
 				}
 			},
+			attached: function() {
+				Polymer.RenderStatus.afterNextRender(this, function() {
+					this._styleTilesForMs();
+				});
+			},
 			ready: function() {
 				this._fetchDashboards();
 			},
@@ -92,6 +97,18 @@
 					}.bind(this));
 			},
 			_changeDisplayName: function() {
+			},
+			_styleTilesForMs: function() {
+				var numberOfColumns = 3;
+				var dashboardTileDivs = Polymer.dom(this.root).querySelectorAll('.dashboards-tile-grid > div');
+				for (var i = 0; i < dashboardTileDivs.length; i++) {
+					var div = dashboardTileDivs[i];
+					var column = (i % numberOfColumns + 1) * 2 - 1;
+					var row = Math.floor(i / numberOfColumns) + 1;
+
+					div.style['-ms-grid-column'] = column;
+					div.style['-ms-grid-row'] = row;
+				}
 			}
 		});
 	</script>
