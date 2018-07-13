@@ -23,96 +23,101 @@
 		</template>
 	</test-fixture>
 	<script>
+		var dashboardUrl1 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/1';
+		var dashboardUrl2 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/1';
+
 		var dashboardsResponse = {
-			"entities": [
+			'entities': [
 				{
-					"class": [
-						"dashboard"
+					'class': [
+						'dashboard'
 					],
-					"rel": [
-						"https://api.brightspace.com/rels/analytics-dashboards"
+					'rel': [
+						'https://api.brightspace.com/rels/analytics-dashboards'
 					],
-					"href": "https://tenant.analytics.api.dev.brightspace.com/dashboards/1"
+					'href': dashboardUrl1
 				},
 				{
-					"class": [
-						"dashboard"
+					'class': [
+						'dashboard'
 					],
-					"rel": [
-						"https://api.brightspace.com/rels/analytics-dashboards"
+					'rel': [
+						'https://api.brightspace.com/rels/analytics-dashboards'
 					],
-					"href": "https://tenant.analytics.api.dev.brightspace.com/dashboards/2"
+					'href': dashboardUrl2
 				}
 			]
 
-		}
+		};
 
 		var dashboardResponse1 = {
-			"properties": {
-				"name": "DisplayName1",
-				"link": "https://www.d2l.com/"
+			'properties': {
+				'name': 'DisplayName1',
+				'link': 'https://www.d2l.com/'
 			},
-			"entities": [
+			'entities': [
 				{
-					"class": [
-						"anlytics-dashboard-image"
+					'class': [
+						'anlytics-dashboard-image'
 					],
-					"rel": [
-						"https://api.brightspace.com/rels/analytics-dashboard-image"
+					'rel': [
+						'https://api.brightspace.com/rels/analytics-dashboard-image'
 					],
-					"href": "./static/dashboard_1.jpg"
+					'href': './static/dashboard_1.jpg'
 				},
 			]
 
-		}
+		};
 
 		var dashboardResponse2 = {
-			"properties": {
-				"name": "DisplayName2",
-				"link": "https://www.d2l.com/"
+			'properties': {
+				'name': 'DisplayName2',
+				'link': 'https://www.d2l.com/'
 			},
-			"entities": [
+			'entities': [
 				{
-					"class": [
-						"anlytics-dashboard-image"
+					'class': [
+						'anlytics-dashboard-image'
 					],
-					"rel": [
-						"https://api.brightspace.com/rels/analytics-dashboard-image"
+					'rel': [
+						'https://api.brightspace.com/rels/analytics-dashboard-image'
 					],
-					"href": "./static/dashboard_2.jpg"
+					'href': './static/dashboard_2.jpg'
 				},
 			]
-		}
+		};
 
-		suite('d2l-my-dashboards', function () {
+		suite('d2l-my-dashboards', function() {
 
 			let element;
-			setup(function (done) {
+			setup(function(done) {
 				element = fixture('d2l-my-dashboards-fixture');
 
 				element._fetchEntity = sinon.stub();
 				element._fetchEntity
-					.withArgs(sinon.match('https://tenant.analytics.api.dev.brightspace.com/dashboards/1'))
-					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardResponse1)))
+					.withArgs(sinon.match(dashboardUrl1))
+					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardResponse1)));
 				element._fetchEntity
-					.withArgs(sinon.match('https://tenant.analytics.api.dev.brightspace.com/dashboards/2'))
-					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardResponse2)))
+					.withArgs(sinon.match(dashboardUrl2))
+					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardResponse2)));
 				element._fetchEntity
 					.withArgs(sinon.match('https://tenant.analytics.api.dev.brightspace.com/dashboards'))
-					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardsResponse)))
+					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardsResponse)));
 
 				flush(done);
 			});
 
-			test('instantiating the element works', function () {
+			test('instantiating the element works', function() {
 				assert.equal(element.is, 'd2l-my-dashboards');
 			});
 
-			test('after fetching dashboards, the correct number of image tiles are displayed', function (done) {
-				element._fetchDashboards().then(function () {
-					const d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-image-tile');
-					assert.equal(d2lImageTiles.length, 2);
-					done();
+			test('after fetching dashboards, the correct number of image tiles are displayed', function(done) {
+				element._fetchDashboards().then(function() {
+					window.setTimeout(function() {
+						const d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-image-tile');
+						assert.equal(d2lImageTiles.length, 2);
+						done();
+					}, 1000);
 				});
 			});
 
