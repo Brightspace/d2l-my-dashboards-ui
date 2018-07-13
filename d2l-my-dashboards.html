@@ -89,17 +89,18 @@
 			_fetchDashboards: function() {
 				return this._fetchEntity(this.dashboardsUrl)
 					.then(function(data) {
-						var getDashboardEntities = data._entitiesByRel['https://api.brightspace.com/rels/analytics-dashboards'].map(function(e) {
+						var getDashboardEntities = data.getSubEntitiesByRel('https://api.brightspace.com/rels/analytics-dashboards').map(function(e) {
 							return this._fetchEntity(e.href);
 						}.bind(this));
 						return Promise.all(getDashboardEntities);
 					}.bind(this))
 					.then(function(dashboardEntities) {
 						var dashboards = dashboardEntities.map(function(dashboardEntity) {
+							var imageEntity = dashboardEntity.getSubEntityByRel('https://api.brightspace.com/rels/analytics-dashboard-image');
 							return {
 								link: dashboardEntity.properties.link,
 								name: dashboardEntity.properties.name,
-								imgUrl: dashboardEntity._entitiesByRel['https://api.brightspace.com/rels/analytics-dashboard-image'][0].href
+								imgUrl: imageEntity ? imageEntity.href : undefined
 							};
 						});
 						this.set('_dashboards', dashboards);
