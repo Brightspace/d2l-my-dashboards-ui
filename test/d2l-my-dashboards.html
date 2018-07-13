@@ -24,7 +24,7 @@
 	</test-fixture>
 	<script>
 		var dashboardUrl1 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/1';
-		var dashboardUrl2 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/1';
+		var dashboardUrl2 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/2';
 
 		var dashboardsResponse = {
 			'entities': [
@@ -111,12 +111,23 @@
 				assert.equal(element.is, 'd2l-my-dashboards');
 			});
 
-			test('after fetching dashboards, the correct number of image tiles are displayed', function(done) {
+			test('after fetching dashboards, the correct number of dashboard tiles are displayed', function(done) {
 				element._fetchDashboards().then(function() {
 					Polymer.dom.flush();
 
-					const d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-image-tile');
+					var d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-dashboard-tile');
 					assert.equal(d2lImageTiles.length, 2);
+
+					var dashboard1 = d2lImageTiles[0].dashboard;
+					assert.equal(dashboard1.link, dashboardResponse1.properties.link)
+					assert.equal(dashboard1.name, dashboardResponse1.properties.name)
+					assert.equal(dashboard1.imgUrl, dashboardResponse1.entities[0].href)
+
+					var dashboard2 = d2lImageTiles[1].dashboard;
+					assert.equal(dashboard2.link, dashboardResponse2.properties.link)
+					assert.equal(dashboard2.name, dashboardResponse2.properties.name)
+					assert.equal(dashboard2.imgUrl, dashboardResponse2.entities[0].href)
+
 					done();
 				});
 			});
