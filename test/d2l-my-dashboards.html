@@ -113,11 +113,11 @@
 
 			test('after fetching dashboards, the correct number of image tiles are displayed', function(done) {
 				element._fetchDashboards().then(function() {
-					window.setTimeout(function() {
-						const d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-image-tile');
-						assert.equal(d2lImageTiles.length, 2);
-						done();
-					}, 1000);
+					Polymer.dom.flush();
+
+					const d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-image-tile');
+					assert.equal(d2lImageTiles.length, 2);
+					done();
 				});
 			});
 
