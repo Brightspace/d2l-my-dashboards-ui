@@ -30,8 +30,8 @@
 		</style>
 		<div class="dashboard-tile">
 			<d2l-image-tile
-				href="[[dashboard.link]]"
-				img-url='[[dashboard.imgUrl]]'
+				href="[[_link]]"
+				img-url='[[_imgUrl]]'
 				dropdown-label='Options'
 				hover-effect='emphasize-image lower-menu'
 			>
@@ -44,7 +44,7 @@
 				</d2l-dropdown-menu>
 
 				<div class="dashboard-text">
-					[[dashboard.name]]
+					[[_name]]
 				</div>
 			</d2l-image-tile>
 		</div>
@@ -55,7 +55,24 @@
 			properties: {
 				dashboard: {
 					type: Object
+				},
+				_link : {
+					type: String
+				},
+				_name : {
+					type: String
+				},
+				_imgUrl : {
+					type: String
 				}
+			},
+			ready: function() {
+				var imageEntity = this.dashboard.getSubEntityByRel('https://api.brightspace.com/rels/analytics-dashboard-image');
+				var imageUrl = imageEntity ? imageEntity.href : undefined;
+
+				this.set('_link', this.dashboard.properties.link);
+				this.set('_name', this.dashboard.properties.name);
+				this.set('_imgUrl', imageUrl);
 			},
 			_changeDisplayName: function() {
 			}

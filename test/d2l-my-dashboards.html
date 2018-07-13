@@ -118,15 +118,15 @@
 					var d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-dashboard-tile');
 					assert.equal(d2lImageTiles.length, 2);
 
-					var dashboard1 = d2lImageTiles[0].dashboard;
-					assert.equal(dashboard1.link, dashboardResponse1.properties.link)
-					assert.equal(dashboard1.name, dashboardResponse1.properties.name)
-					assert.equal(dashboard1.imgUrl, dashboardResponse1.entities[0].href)
+					var dashboard1 = d2lImageTiles[0];
+					assert.equal(dashboard1._link, dashboardResponse1.properties.link);
+					assert.equal(dashboard1._name, dashboardResponse1.properties.name);
+					assert.equal(dashboard1._imgUrl, dashboardResponse1.entities[0].href);
 
-					var dashboard2 = d2lImageTiles[1].dashboard;
-					assert.equal(dashboard2.link, dashboardResponse2.properties.link)
-					assert.equal(dashboard2.name, dashboardResponse2.properties.name)
-					assert.equal(dashboard2.imgUrl, dashboardResponse2.entities[0].href)
+					var dashboard2 = d2lImageTiles[1];
+					assert.equal(dashboard2._link, dashboardResponse2.properties.link);
+					assert.equal(dashboard2._name, dashboardResponse2.properties.name);
+					assert.equal(dashboard2._imgUrl, dashboardResponse2.entities[0].href);
 
 					done();
 				});

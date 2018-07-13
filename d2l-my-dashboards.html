@@ -56,15 +56,7 @@
 						return Promise.all(getDashboardEntities);
 					}.bind(this))
 					.then(function(dashboardEntities) {
-						var dashboards = dashboardEntities.map(function(dashboardEntity) {
-							var imageEntity = dashboardEntity.getSubEntityByRel('https://api.brightspace.com/rels/analytics-dashboard-image');
-							return {
-								link: dashboardEntity.properties.link,
-								name: dashboardEntity.properties.name,
-								imgUrl: imageEntity ? imageEntity.href : undefined
-							};
-						});
-						this.set('_dashboards', dashboards);
+						this.set('_dashboards', dashboardEntities);
 					}.bind(this));
 			},
 			_styleTilesForMs: function() {
