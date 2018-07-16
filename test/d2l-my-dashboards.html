@@ -89,8 +89,11 @@
 
 		suite('d2l-my-dashboards', function() {
 
-			let element;
+			var element;
+			var sandbox;
+
 			setup(function(done) {
+				sandbox = sinon.sandbox.create();
 				element = fixture('d2l-my-dashboards-fixture');
 
 				element._fetchEntity = sinon.stub();
@@ -105,6 +108,10 @@
 					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardsResponse)));
 
 				flush(done);
+			});
+
+			teardown(function() {
+				sandbox.restore();
 			});
 
 			test('instantiating the element works', function() {
@@ -132,6 +139,46 @@
 				});
 			});
 
+			test('on open-edit-dashboard event the d2l-simple-overlay should open with correct input value', function(done) {
+				var overlay = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
+				var spy = sandbox.spy(overlay, 'open');
+
+				var expectedInitialInputValue = 'expectedInitialInputValue';
+				var event = new CustomEvent('open-edit-dashboard', { detail: { displayName: expectedInitialInputValue } });
+
+				element.addEventListener('open-edit-dashboard', function() {
+					var initialInputValue = Polymer.dom(overlay).querySelector('#display-name-input').value;
+
+					expect(spy).to.have.been.called;
+					assert.equal(initialInputValue, expectedInitialInputValue);
+
+					done();
+				});
+
+				element.dispatchEvent(event);
+			});
+
+			test('update display name button fires close-edit-dashboard event', function(done) {
+				var overlay = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
+
+				element.addEventListener('close-edit-dashboard', function() {
+					assert.isOk('close-edit-dashboard event was fired');
+					done();
+				});
+
+				Polymer.dom(overlay).querySelector('#display-name-update-button').click();
+			});
+
+			test('cancel display name button fires close-edit-dashboard event', function(done) {
+				var overlay = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
+
+				element.addEventListener('close-edit-dashboard', function() {
+					assert.isOk('close-edit-dashboard event was fired');
+					done();
+				});
+
+				Polymer.dom(overlay).querySelector('#display-name-cancel-button').click();
+			});
 		});
 	</script>
 </body>

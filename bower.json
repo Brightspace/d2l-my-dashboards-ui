@@ -19,9 +19,12 @@
     "polymer": "Polymer/polymer#1 - 2"
   },
   "devDependencies": {
+    "d2l-button": "^4.5.1",
     "d2l-dropdown": "^6.1.0",
     "d2l-fetch-siren-entity-behavior": "Brightspace/d2l-fetch-siren-entity-behavior#^5.0.2",
     "d2l-menu": "^1.0.4",
+    "d2l-simple-overlay": "git://github.com/Brightspace/simple-overlay#^2.2.0",
+    "d2l-text-input": "BrightspaceUI/text-input#^0.4.0",
     "d2l-tile": "^3.0.9",
     "d2l-typography": "BrightspaceUI/typography#^6.0.0",
     "fetch": "^2.0.4",
