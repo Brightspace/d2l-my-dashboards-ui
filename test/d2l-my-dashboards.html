@@ -158,8 +158,21 @@
 				element.dispatchEvent(event);
 			});
 
+<<<<<<< HEAD
 			test('update display name button fires close-edit-dashboard event', function(done) {
+=======
+			test('update display name button first close-edit-dashboard event', function(done) {
+>>>>>>> US97887 - Update to display name should show a change in the UI
 				var overlay = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
+
+				// Mock editor context
+				element._editorContext = {};
+				element._editorContext.index = 0;
+				element._editorContext.updateDisplayName = function() {
+					return Promise.resolve();
+				};
+				// Mock dashboard
+				element._dashboards = [window.D2L.Hypermedia.Siren.Parse(dashboardResponse1)];
 
 				element.addEventListener('close-edit-dashboard', function() {
 					assert.isOk('close-edit-dashboard event was fired');
@@ -178,6 +191,36 @@
 				});
 
 				Polymer.dom(overlay).querySelector('#display-name-cancel-button').click();
+			});
+
+			test('When updating display name of dashboard at index 1, ensure user will see updated name', function(done) {
+				var expectedDisplayName = 'expectedDisplayName';
+				var dashboardIndexToUpdate = 1;
+
+				element._fetchDashboards().then(function() {
+					Polymer.dom.flush();
+
+					element._editorContext = {};
+					element._editorContext.index = dashboardIndexToUpdate;
+					element._editorContext.updateDisplayName = function() {
+						return Promise.resolve('Mock request to update backend');
+					};
+
+					var dashboardEditor = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
+					Polymer.dom(dashboardEditor).querySelector('#display-name-input').value = expectedDisplayName;
+
+					element.addEventListener('close-edit-dashboard', function() {
+						Polymer.dom.flush();
+
+						var d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-dashboard-tile');
+						var updatedDashboard = d2lImageTiles[dashboardIndexToUpdate];
+
+						assert.equal(updatedDashboard._name, expectedDisplayName);
+						done();
+					});
+
+					Polymer.dom(dashboardEditor).querySelector('#display-name-update-button').click();
+				});
 			});
 		});
 	</script>

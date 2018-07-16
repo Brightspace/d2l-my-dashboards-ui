@@ -54,7 +54,11 @@
 			is: 'd2l-dashboard-tile',
 			properties: {
 				dashboard: {
-					type: Object
+					type: Object,
+					observer: '_configureDashboard'
+				},
+				index: {
+					type: Number
 				},
 				_link : {
 					type: String
@@ -67,6 +71,9 @@
 				}
 			},
 			ready: function() {
+				this._configureDashboard();
+			},
+			_configureDashboard: function() {
 				var imageEntity = this.dashboard.getSubEntityByRel('https://api.brightspace.com/rels/analytics-dashboard-image');
 				var imageUrl = imageEntity ? imageEntity.href : undefined;
 
@@ -76,8 +83,29 @@
 			},
 			_changeDisplayName: function() {
 				this.fire('open-edit-dashboard', {
-					displayName: this._name
+					displayName: this._name,
+					index: this.index,
+					updateDisplayName: this._generateUpdateAction(this.dashboard.getActionByName('update-display-name')).bind(this)
 				});
+			},
+			_generateUpdateAction: function(action) {
+				return function(updatedDisplayName) {
+					console.log('New display name: ' + updatedDisplayName );
+					var fields = action.fields;
+					var body = '';
+
+					fields.forEach(function(field) {
+						body = body + encodeURIComponent(field.name) + '=' + encodeURIComponent(updatedDisplayName) + '&';
+					});
+					return window.d2lfetch
+						.fetch(action.href, {
+							method: action.method,
+							headers: {
+								'content-type':'application/x-www-form-urlencoded'
+							},
+							body: body
+						});
+				}
 			}
 		});
 	</script>

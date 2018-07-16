@@ -37,7 +37,9 @@
 		<div class="dashboards-tile-grid columns-3">
 			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
 				<div class="dashboard-tile">
-					<d2l-dashboard-tile dashboard="[[dashboard]]">
+					<d2l-dashboard-tile
+						index="[[index]]"
+						dashboard="[[dashboard]]">
 					</d2l-dashboard-tile>
 				</div>
 			</template>
@@ -53,6 +55,10 @@
 				},
 				dashboardsUrl: {
 					type: String
+				},
+				_editorContext: {
+					type: Object,
+					value: {}
 				}
 			},
 			behaviors: [
@@ -68,9 +74,8 @@
 				});
 
 				var updateDisplayNameButton = Polymer.dom(this.root).querySelector('#display-name-update-button');
-				updateDisplayNameButton.addEventListener('click', function() {
-					this.fire('close-edit-dashboard');
-				});
+				updateDisplayNameButton.addEventListener('click', this._updateButton.bind(this));
+
 				var cancelDisplayNameButton = Polymer.dom(this.root).querySelector('#display-name-cancel-button');
 				cancelDisplayNameButton.addEventListener('click', function() {
 					this.fire('close-edit-dashboard');
@@ -82,6 +87,8 @@
 			_onEditDashboardView: function(e) {
 				var overlay = Polymer.dom(this.root).querySelector('#dashboard-edit-overlay');
 				var detail = e.detail ? e.detail : {};
+
+				this._editorContext = detail;
 
 				Polymer.dom(overlay).querySelector('#display-name-input').value = detail.displayName;
 				overlay.open();
@@ -113,6 +120,26 @@
 					div.style['-ms-grid-column'] = column;
 					div.style['-ms-grid-row'] = row;
 				}
+			},
+			_updateButton: function() {
+				var dashboardEditor = Polymer.dom(this.root).querySelector('#dashboard-edit-overlay');
+				var updatedDisplayName = Polymer.dom(dashboardEditor).querySelector('#display-name-input').value;
+
+				var index = this._editorContext.index;
+				var dashboardToModify = this._dashboards[index];
+
+				this._editorContext.updateDisplayName(updatedDisplayName)
+					.then(function() {
+						var updatedDashboard = Object.assign(Object.create(Object.getPrototypeOf(dashboardToModify)), dashboardToModify);
+						updatedDashboard.properties.name = updatedDisplayName;
+
+						this.splice('_dashboards', index, 1, updatedDashboard);
+						this.fire('close-edit-dashboard');
+					}.bind(this))
+					.catch(function() {
+						this.fire('close-edit-dashboard');
+					}.bind(this));
+
 			}
 		});
 	</script>
