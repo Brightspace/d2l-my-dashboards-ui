@@ -5,6 +5,7 @@
 <link rel="import" href="../d2l-simple-overlay/d2l-simple-overlay.html">
 <link rel="import" href="../d2l-text-input/d2l-text-input.html">
 <link rel="import" href="./src/d2l-dashboard-tile.html">
+<link rel="import" href="./localize-behavior.html">
 
 
 <dom-module id='d2l-my-dashboards'>
@@ -26,17 +27,19 @@
 		</style>
 		<d2l-simple-overlay
 			id="dashboard-edit-overlay"
-			title-name="Edit Dashboard"
+			title-name="[[localize('dashboardEditorTitle')]]"
 			close-simple-overlay-alt-text="close">
+
 			<div id='display-name-error' hidden>
 				<d2l-alert type="error">
-					Error updating dashboard display name.
+					[[localize('displayNameError')]]
 				</d2l-alert>
 			</div>
-			Dashboard Display Name:
+			[[localize('dashboardEditorTitle')]]
 			<d2l-text-input id='display-name-input' name="dashboardDisplayName"></d2l-text-input>
-			<d2l-button id='display-name-update-button' primary>Save</d2l-button>
-			<d2l-button id='display-name-cancel-button'>Cancel</d2l-button>
+			<d2l-button id='display-name-update-button' primary>[[localize('save')]]</d2l-button>
+			<d2l-button id='display-name-cancel-button'>[[localize('cancel')]]</d2l-button>
+
 		</d2l-simple-overlay>
 		<div class="dashboards-tile-grid columns-3">
 			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
@@ -67,6 +70,7 @@
 				}
 			},
 			behaviors: [
+				D2L.PolymerBehaviors.AnalyticsDashboards.LocalizeBehavior,
 				D2L.PolymerBehaviors.FetchSirenEntityBehavior
 			],
 			listeners: {
