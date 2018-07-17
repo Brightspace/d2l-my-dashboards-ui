@@ -1,9 +1,6 @@
 <link rel='import' href='../polymer/polymer.html'>
-<link rel='import' href='../d2l-menu/d2l-menu.html'>
-<link rel='import' href='../d2l-dropdown/d2l-dropdown-menu.html'>
-<link rel='import' href='../d2l-menu/d2l-menu-item.html'>
-<link rel='import' href='../d2l-tile/d2l-image-tile.html'>
 <link rel="import" href="../d2l-fetch-siren-entity-behavior/d2l-fetch-siren-entity-behavior.html">
+<link rel="import" href="./src/d2l-dashboard-tile.html">
 
 <dom-module id='d2l-my-dashboards'>
 	<template strip-whitespace>
@@ -17,53 +14,17 @@
 				grid-template-columns: repeat(3, 1fr);
 				-ms-grid-columns: 1fr 15px 1fr 15px 1fr;
 			}
-			.dashboard-text {
-				margin-top: 0.6rem;
-				float: left;
-				flex: 1;
-				overflow: hidden;
-				word-wrap: break-word; /* IE/Edge */
-				overflow-wrap: break-word; /* replaces 'word-wrap' in Firefox, Chrome, Safari */
-			}
-			d2l-image-tile:hover .dashboard-text {
-				text-decoration: underline;
-			}
-			.dashboard-tile d2l-image-tile {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
-			d2l-image-tile {
-				--d2l-image-tile-image-height: 100px;
-				border-color: transparent;
-			}
 		</style>
 		<div class="dashboards-tile-grid columns-3">
-			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]'>
+			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
 				<div class="dashboard-tile">
-					<d2l-image-tile
-						href="[[item.link]]"
-						img-url='[[item.imgUrl]]'
-						dropdown-label='Options'
-						hover-effect='emphasize-image lower-menu'
-					>
-						<d2l-dropdown-menu slot='d2l-image-tile-dropdown'>
-							<d2l-menu label='Options'>
-								<d2l-menu-item
-									text='Change Display Name'
-									on-d2l-menu-item-select='_changeDisplayName' />
-							</d2l-menu>
-						</d2l-dropdown-menu>
-
-						<div class="dashboard-text">
-							[[item.name]]
-						</div>
-					</d2l-image-tile>
+					<d2l-dashboard-tile dashboard="[[dashboard]]">
+					</d2l-dashboard-tile>
 				</div>
 			</template>
 	</div>
-
 	</template>
+
 	<script>
 		Polymer({
 			is: 'd2l-my-dashboards',
@@ -95,18 +56,8 @@
 						return Promise.all(getDashboardEntities);
 					}.bind(this))
 					.then(function(dashboardEntities) {
-						var dashboards = dashboardEntities.map(function(dashboardEntity) {
-							var imageEntity = dashboardEntity.getSubEntityByRel('https://api.brightspace.com/rels/analytics-dashboard-image');
-							return {
-								link: dashboardEntity.properties.link,
-								name: dashboardEntity.properties.name,
-								imgUrl: imageEntity ? imageEntity.href : undefined
-							};
-						});
-						this.set('_dashboards', dashboards);
+						this.set('_dashboards', dashboardEntities);
 					}.bind(this));
-			},
-			_changeDisplayName: function() {
 			},
 			_styleTilesForMs: function() {
 				var numberOfColumns = 3;

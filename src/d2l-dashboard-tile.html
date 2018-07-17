@@ -1,0 +1,81 @@
+<link rel='import' href='../../polymer/polymer.html'>
+<link rel='import' href='../../d2l-menu/d2l-menu.html'>
+<link rel='import' href='../../d2l-dropdown/d2l-dropdown-menu.html'>
+<link rel='import' href='../../d2l-menu/d2l-menu-item.html'>
+<link rel='import' href='../../d2l-tile/d2l-image-tile.html'>
+
+<dom-module id='d2l-dashboard-tile'>
+	<template strip-whitespace>
+		<style>
+			.dashboard-text {
+				margin-top: 0.6rem;
+				float: left;
+				flex: 1;
+				overflow: hidden;
+				word-wrap: break-word; /* IE/Edge */
+				overflow-wrap: break-word; /* replaces 'word-wrap' in Firefox, Chrome, Safari */
+			}
+			d2l-image-tile:hover .dashboard-text {
+				text-decoration: underline;
+			}
+			.dashboard-tile d2l-image-tile {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			d2l-image-tile {
+				--d2l-image-tile-image-height: 100px;
+				border-color: transparent;
+			}
+		</style>
+		<div class="dashboard-tile">
+			<d2l-image-tile
+				href="[[_link]]"
+				img-url='[[_imgUrl]]'
+				dropdown-label='Options'
+				hover-effect='emphasize-image lower-menu'
+			>
+				<d2l-dropdown-menu slot='d2l-image-tile-dropdown'>
+					<d2l-menu label='Options'>
+						<d2l-menu-item
+							text='Change Display Name'
+							on-d2l-menu-item-select='_changeDisplayName' />
+					</d2l-menu>
+				</d2l-dropdown-menu>
+
+				<div class="dashboard-text">
+					[[_name]]
+				</div>
+			</d2l-image-tile>
+		</div>
+	</template>
+	<script>
+		Polymer({
+			is: 'd2l-dashboard-tile',
+			properties: {
+				dashboard: {
+					type: Object
+				},
+				_link : {
+					type: String
+				},
+				_name : {
+					type: String
+				},
+				_imgUrl : {
+					type: String
+				}
+			},
+			ready: function() {
+				var imageEntity = this.dashboard.getSubEntityByRel('https://api.brightspace.com/rels/analytics-dashboard-image');
+				var imageUrl = imageEntity ? imageEntity.href : undefined;
+
+				this.set('_link', this.dashboard.properties.link);
+				this.set('_name', this.dashboard.properties.name);
+				this.set('_imgUrl', imageUrl);
+			},
+			_changeDisplayName: function() {
+			}
+		});
+	</script>
+</dom-module>
