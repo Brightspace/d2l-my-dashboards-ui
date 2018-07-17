@@ -144,7 +144,7 @@
 						var updatedDashboard = Object.assign(Object.create(Object.getPrototypeOf(dashboardToModify)), dashboardToModify);
 						updatedDashboard.properties.name = updatedDisplayName;
 
-						this.splice('_dashboards', index, 1, updatedDashboard);
+						this.set('_dashboards.' + index, updatedDashboard);
 
 						this.fire('close-edit-dashboard');
 					}.bind(this))
