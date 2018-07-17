@@ -1,71 +1,41 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-		<title>d2l-my-dashboards demo</title>
-		<script>
-			window.d2lfetch = {
-				fetch: function() {
-					return Promise.resolve({
-						ok: true,
-						json: function() {
-							return Promise.resolve({
-								value: [
-									{
-										imgUrl: './static/dashboard_1.jpg',
-										link: 'https://www.d2l.com/',
-										name: 'DisplayName1'
-									},
-									{
-										imgUrl: './static/dashboard_2.jpg',
-										link: 'https://www.d2l.com/',
-										name: 'DisplayName2'
-									},
-									{
-										imgUrl: './static/dashboard_3.jpg',
-										link: 'https://www.d2l.com/',
-										name: 'DisplayName3'
-									}
-								]
-							});
-						}
-					});
-				}
-			};
-		</script>
 
-		<!-- For IE11 -->
-		<script src="../../lie/dist/lie.polyfill.min.js"></script>
-		<!-- For IE11 -->
-		<script src="../../fetch/fetch.js"></script>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+	<title>d2l-my-dashboards demo</title>
+	<script src="./mock.js"></script>
+	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+	<script src="../../lie/dist/lie.polyfill.min.js"></script> <!-- For IE11 -->
+	<script src="../../fetch/fetch.js"></script> <!-- For IE11 -->
+	<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+	<link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+	<link rel="import" href="../../d2l-typography/d2l-typography.html">
+	<link rel="import" href="../d2l-my-dashboards.html">
+	<custom-style>
+		<style is="custom-style" include="demo-pages-shared-styles"></style>
+	</custom-style>
+	<custom-style include="d2l-typography">
+		<style is="custom-style" include="d2l-typography"></style>
+	</custom-style>
+	<style>
+		html {
+			font-size: 20px;
+		}
+	</style>
+</head>
 
-		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-		<link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-		<link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-		<link rel="import" href="../../d2l-typography/d2l-typography.html">
-		<link rel="import" href="../d2l-my-dashboards.html">
-		<custom-style>
-			<style is="custom-style" include="demo-pages-shared-styles"></style>
-		</custom-style>
-		<custom-style include="d2l-typography">
-			<style is="custom-style" include="d2l-typography"></style>
-		</custom-style>
-		<style>
-			html {
-				font-size: 20px;
-			}
-		</style>
-	</head>
-	<body unresolved class="d2l-typography">
-		<div class="vertical-section-container centered">
-			<h3>d2l-my-dashboards</h3>
-			<demo-snippet>
-				<template>
-					<p>Note that /demo-dashboards is being mocked out</p>
-					<d2l-my-dashboards dashboards-url="/demo-dashboards"></d2l-my-dashboards>
-				</template>
-			</demo-snippet>
-		</div>
-	</body>
+<body unresolved class="d2l-typography">
+	<div class="vertical-section-container centered">
+		<h3>d2l-my-dashboards</h3>
+		<demo-snippet>
+			<template>
+				<p>Note that /demo-dashboards is being mocked out</p>
+				<d2l-my-dashboards dashboards-url="https://tenant.analytics.api.dev.brightspace.com/dashboards"></d2l-my-dashboards>
+			</template>
+		</demo-snippet>
+	</div>
+</body>
+
 </html>
