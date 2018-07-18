@@ -66,7 +66,7 @@ var mockedRoutes = {
     ],
     "actions": [
       {
-        "href":"https://84d0c96f-cf9f-478f-8d0d-2582239eb1ce.organizations.api.dev.brightspace.com/dashboards/1/displayName",
+        "href":"https://tenant.analytics.api.dev.brightspace.com/dashboards/1/displayName",
         "name":"update-display-name",
         "method":"PUT",
         "fields":[
