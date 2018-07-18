@@ -63,6 +63,20 @@ var mockedRoutes = {
         ],
         "href": "./static/dashboard_1.jpg"
       },
+    ],
+    "actions": [
+      {
+        "href":"https://tenant.analytics.api.dev.brightspace.com/dashboards/1/displayName",
+        "name":"update-display-name",
+        "method":"PUT",
+        "fields":[
+           {
+              "type":"text",
+              "name":"displayName",
+              "value":""
+           }
+        ]
+     }
     ]
   },
   "https://tenant.analytics.api.dev.brightspace.com/dashboards/2": {
