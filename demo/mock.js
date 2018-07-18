@@ -36,15 +36,6 @@ var mockedRoutes = {
           "https://api.brightspace.com/rels/analytics-dashboards"
         ],
         "href": "https://tenant.analytics.api.dev.brightspace.com/dashboards/2"
-      },
-      {
-        "class": [
-          "dashboard"
-        ],
-        "rel": [
-          "https://api.brightspace.com/rels/analytics-dashboards"
-        ],
-        "href": "https://tenant.analytics.api.dev.brightspace.com/dashboards/3"
       }
     ]
   },

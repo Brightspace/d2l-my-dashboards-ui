@@ -20,6 +20,10 @@
 				grid-template-columns: repeat(3, 1fr);
 				-ms-grid-columns: 1fr 15px 1fr 15px 1fr;
 			}
+			.dashboards-tile-grid.columns-2 {
+				grid-template-columns: repeat(2, 1fr);
+				-ms-grid-columns: 1fr 15px 1fr;
+			}
 			d2l-button {
 				padding-top: 5px;
 				padding-right: 5px;
@@ -41,7 +45,7 @@
 			<d2l-button id='display-name-cancel-button'>[[localize('cancel')]]</d2l-button>
 
 		</d2l-simple-overlay>
-		<div class="dashboards-tile-grid columns-3">
+		<div class="dashboards-tile-grid columns-2">
 			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
 				<div class="dashboard-tile">
 					<d2l-dashboard-tile
@@ -120,7 +124,7 @@
 					}.bind(this));
 			},
 			_styleTilesForMs: function() {
-				var numberOfColumns = 3;
+				var numberOfColumns = 2;
 				var dashboardTileDivs = Polymer.dom(this.root).querySelectorAll('.dashboards-tile-grid > div');
 				for (var i = 0; i < dashboardTileDivs.length; i++) {
 					var div = dashboardTileDivs[i];
