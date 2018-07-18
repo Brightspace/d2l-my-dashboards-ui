@@ -75,6 +75,9 @@
 				this.set('_imgUrl', imageUrl);
 			},
 			_changeDisplayName: function() {
+				this.fire('open-edit-dashboard', {
+					displayName: this._name
+				});
 			}
 		});
 	</script>
