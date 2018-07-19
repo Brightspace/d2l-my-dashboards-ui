@@ -3,6 +3,7 @@
 <link rel='import' href='../../d2l-dropdown/d2l-dropdown-menu.html'>
 <link rel='import' href='../../d2l-menu/d2l-menu-item.html'>
 <link rel='import' href='../../d2l-tile/d2l-image-tile.html'>
+<link rel="import" href="../localize-behavior.html">
 
 <dom-module id='d2l-dashboard-tile'>
 	<template strip-whitespace>
@@ -31,15 +32,15 @@
 		<div class="dashboard-tile">
 			<d2l-image-tile
 				href="[[_link]]"
-				img-url='[[_imgUrl]]'
-				dropdown-label='Options'
-				hover-effect='emphasize-image lower-menu'
+				img-url="[[_imgUrl]]"
+				dropdown-label="Options"
+				hover-effect="emphasize-image lower-menu"
 			>
-				<d2l-dropdown-menu slot='d2l-image-tile-dropdown'>
-					<d2l-menu label='Options'>
+				<d2l-dropdown-menu slot="d2l-image-tile-dropdown">
+					<d2l-menu label="Options">
 						<d2l-menu-item
-							text='Change Display Name'
-							on-d2l-menu-item-select='_changeDisplayName' />
+							text="[[localize('changeDisplayName')]]"
+							on-d2l-menu-item-select="_changeDisplayName" />
 					</d2l-menu>
 				</d2l-dropdown-menu>
 
@@ -70,6 +71,9 @@
 					type: String
 				}
 			},
+			behaviors: [
+				D2L.PolymerBehaviors.AnalyticsDashboards.LocalizeBehavior
+			],
 			ready: function() {
 				this._configureDashboard();
 			},

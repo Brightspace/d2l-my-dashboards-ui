@@ -5,6 +5,7 @@
 <link rel="import" href="../d2l-simple-overlay/d2l-simple-overlay.html">
 <link rel="import" href="../d2l-text-input/d2l-text-input.html">
 <link rel="import" href="./src/d2l-dashboard-tile.html">
+<link rel="import" href="./localize-behavior.html">
 
 
 <dom-module id='d2l-my-dashboards'>
@@ -19,6 +20,10 @@
 				grid-template-columns: repeat(3, 1fr);
 				-ms-grid-columns: 1fr 15px 1fr 15px 1fr;
 			}
+			.dashboards-tile-grid.columns-2 {
+				grid-template-columns: repeat(2, 1fr);
+				-ms-grid-columns: 1fr 15px 1fr;
+			}
 			d2l-button {
 				padding-top: 5px;
 				padding-right: 5px;
@@ -26,19 +31,21 @@
 		</style>
 		<d2l-simple-overlay
 			id="dashboard-edit-overlay"
-			title-name="Edit Dashboard"
+			title-name="[[localize('dashboardEditorTitle')]]"
 			close-simple-overlay-alt-text="close">
+
 			<div id='display-name-error' hidden>
 				<d2l-alert type="error">
-					Error updating dashboard display name.
+					[[localize('displayNameError')]]
 				</d2l-alert>
 			</div>
-			Dashboard Display Name:
+			[[localize('dashboardEditorTitle')]]
 			<d2l-text-input id='display-name-input' name="dashboardDisplayName"></d2l-text-input>
-			<d2l-button id='display-name-update-button' primary>Save</d2l-button>
-			<d2l-button id='display-name-cancel-button'>Cancel</d2l-button>
+			<d2l-button id='display-name-update-button' primary>[[localize('save')]]</d2l-button>
+			<d2l-button id='display-name-cancel-button'>[[localize('cancel')]]</d2l-button>
+
 		</d2l-simple-overlay>
-		<div class="dashboards-tile-grid columns-3">
+		<div class="dashboards-tile-grid columns-2">
 			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
 				<div class="dashboard-tile">
 					<d2l-dashboard-tile
@@ -67,6 +74,7 @@
 				}
 			},
 			behaviors: [
+				D2L.PolymerBehaviors.AnalyticsDashboards.LocalizeBehavior,
 				D2L.PolymerBehaviors.FetchSirenEntityBehavior
 			],
 			listeners: {
@@ -116,7 +124,7 @@
 					}.bind(this));
 			},
 			_styleTilesForMs: function() {
-				var numberOfColumns = 3;
+				var numberOfColumns = 2;
 				var dashboardTileDivs = Polymer.dom(this.root).querySelectorAll('.dashboards-tile-grid > div');
 				for (var i = 0; i < dashboardTileDivs.length; i++) {
 					var div = dashboardTileDivs[i];
