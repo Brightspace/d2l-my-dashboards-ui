@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+	<title>d2l-dashboard-tile test</title>
+	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+	<!-- For IE11 -->
+	<script src="../../lie/dist/lie.polyfill.min.js"></script>
+	<!-- For IE11 -->
+	<script src="../../fetch/fetch.js"></script>
+
+	<script src="../../web-component-tester/browser.js"></script>
+	<link rel="import" href="../src/d2l-dashboard-tile.html">
+</head>
+
+<body>
+	<test-fixture id="d2l-dashboard-tile-fixture">
+		<template>
+			<d2l-dashboard-tile index="0">
+			</d2l-dashboard-tile>
+		</template>
+	</test-fixture>
+	<script>
+		function createMockDashboard(
+			link,
+			name,
+			imageLink,
+			actionInfo
+		) {
+			return {
+				properties: {
+					link: link,
+					name: name,
+				},
+				getSubEntityByRel: function() {
+					return { href: imageLink };
+				},
+				getActionByName: function() {
+					return actionInfo;
+				}
+			};
+		}
+
+		suite('d2l-dashboard-tile', function() {
+			var element;
+			var sandbox;
+
+			setup(function(done) {
+				sandbox = sinon.sandbox.create();
+				element = fixture('d2l-dashboard-tile-fixture');
+				flush(done);
+			});
+
+			teardown(function() {
+				sandbox.restore();
+			});
+
+			test('can be constructed', function() {
+				assert.equal(element.is, 'd2l-dashboard-tile');
+				assert.equal(element.index, 0);
+			});
+
+			test('properties update correctly when dashboard updates', function() {
+				var expectedLink = 'expectedLink';
+				var expectedName = 'expectedName';
+				var expectedImageLink = 'expectedImageLink';
+
+				var mockDashboard = createMockDashboard(
+					expectedLink,
+					expectedName,
+					expectedImageLink,
+					'someActionLink'
+				);
+
+				element.set('dashboard', mockDashboard);
+				assert.equal(element._link, expectedLink);
+				assert.equal(element._name, expectedName);
+				assert.equal(element._imgUrl, expectedImageLink);
+			});
+
+			// Test was flaky when actually trying to click the menu item so using _changeDisplayName directly
+			test('clicking the button to edit the dashboard fires correct event', function(done) {
+				var expectedLink = 'expectedLink';
+				var expectedName = 'expectedName';
+				var expectedActionInfo = 'expectedActionInfo';
+
+				var mockDashboard = createMockDashboard(
+					expectedLink,
+					expectedName,
+					'someImagelink',
+					expectedActionInfo
+				);
+
+				element._generateUpdateAction = function(actionInfo) {
+					assert.equal(actionInfo, expectedActionInfo);
+					return function() {};
+				};
+				element.set('dashboard', mockDashboard);
+
+				element.addEventListener('dashboard-editor-opened', function(e) {
+					assert.equal(e.detail.displayName, expectedName);
+					assert.equal(e.detail.index, 0);
+					done();
+				});
+
+				element._changeDisplayName();
+			});
+		});
+	</script>
+</body>
+
+</html>

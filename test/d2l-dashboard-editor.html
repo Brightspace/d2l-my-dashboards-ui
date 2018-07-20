@@ -81,7 +81,7 @@
 				element.dispatchEvent(event);
 			});
 
-			test('when hidden attribute toggled to fa;se editor is displayed', function() {
+			test('when hidden attribute toggled to false editor is displayed', function() {
 				var dashboardEditor = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
 				var spy = sandbox.spy(dashboardEditor, 'open');
 
