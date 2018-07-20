@@ -87,25 +87,22 @@
 			]
 		};
 
-		function mockEditorContext(
+		function testEventBehavior(
 			element,
-			index,
-			updateDisplayNameReturnValue
+			eventNameUnderTest,
+			detail,
+			runEventAssertions
 		) {
-			element._editorContext = {};
-			element._editorContext.index = index;
-			element._editorContext.updateDisplayName = function() {
-				return updateDisplayNameReturnValue;
-			};
-		}
+			var event = new CustomEvent(
+				eventNameUnderTest,
+				{ detail: detail }
+			);
 
-		function setDisplayNameInput(
-			element,
-			inputValue
-		) {
-			var dashboardEditor = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
-			var userInput = Polymer.dom(dashboardEditor).querySelector('#display-name-input');
-			userInput.setAttribute('value', inputValue);
+			element.addEventListener(eventNameUnderTest, function() {
+				runEventAssertions();
+			});
+
+			element.dispatchEvent(event);
 		}
 
 		suite('d2l-my-dashboards', function() {
@@ -134,11 +131,13 @@
 				sandbox.restore();
 			});
 
-			test('instantiating the element works', function() {
+			test('is constructed with correct properties', function() {
 				assert.equal(element.is, 'd2l-my-dashboards');
+				assert.equal(element.dashboardsUrl, 'https://tenant.analytics.api.dev.brightspace.com/dashboards');
+				assert.equal(element._dashboardEditorHidden, true);
 			});
 
-			test('after fetching dashboards, the correct number of dashboard tiles are displayed', function(done) {
+			test('after fetching dashboards, the correct number of d2l-dashboard-tile elements are displayed', function(done) {
 				element._fetchDashboards().then(function() {
 					Polymer.dom.flush();
 
@@ -159,111 +158,71 @@
 				});
 			});
 
-			test('on open-edit-dashboard event the d2l-simple-overlay should open with correct input value', function(done) {
-				var overlay = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
-				var spy = sandbox.spy(overlay, 'open');
+			test('when dashboard-editor-opened event is received, properties are updated accordingly', function(done) {
+				var expectedEditorContext = { context: 'expectedEditorContext' };
 
-				var expectedInitialInputValue = 'expectedInitialInputValue';
-				var event = new CustomEvent('open-edit-dashboard', { detail: { displayName: expectedInitialInputValue } });
-
-				element.addEventListener('open-edit-dashboard', function() {
-					var initialInputValue = Polymer.dom(overlay).querySelector('#display-name-input').value;
-
-					expect(spy).to.have.been.called;
-					assert.equal(initialInputValue, expectedInitialInputValue);
-
+				function testEvent() {
+					assert.equal(element._dashboardEditorHidden, false);
+					assert.equal(element._editorContext, expectedEditorContext);
 					done();
-				});
+				}
 
-				element.dispatchEvent(event);
+				testEventBehavior(
+					element,
+					'dashboard-editor-opened',
+					expectedEditorContext,
+					testEvent
+				);
 			});
 
-			test('update display name button fires close-edit-dashboard event when display name is not empty', function(done) {
-				mockEditorContext(element, 0, Promise.resolve());
-				setDisplayNameInput(element, 'notEmpty');
-
-				element._dashboards = [window.D2L.Hypermedia.Siren.Parse(dashboardResponse1)];
-
-				var dashboardEditor = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
-
-				element.addEventListener('close-edit-dashboard', function() {
-					assert.isOk('close-edit-dashboard event was fired');
+			test('when dashboard-editor-closed event is received, properties are updated accordingly', function(done) {
+				function testEvent() {
+					assert.equal(element._dashboardEditorHidden, true);
 					done();
-				});
+				}
 
-				Polymer.dom(dashboardEditor).querySelector('#display-name-update-button').click();
+				// Set to false to ensure correct toggle
+				element._dashboardEditorHidden = false;
+
+				testEventBehavior(
+					element,
+					'dashboard-editor-closed',
+					{},
+					testEvent
+				);
 			});
 
-			test('When failing to update the dashboard display name with valid display name, ensure error message is presented', function(done) {
-				mockEditorContext(element, 0, Promise.reject());
-				setDisplayNameInput(element, 'notEmpty');
+			test(
+				'when dashboard-name-updated event is received, '
+				+ 'dashboard tile display name is updated', function(done) {
 
-				element._dashboards = [window.D2L.Hypermedia.Siren.Parse(dashboardResponse1)];
+					var dashboardIndexToUpdate = 1;
+					var expectedDisplayName = 'expectedDisplayName';
 
-				var dashboardEditor = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
-
-				element._updateButton()
-					.then(function() {
-						var displayNameErrorMessage = Polymer.dom(dashboardEditor).querySelector('#display-name-error');
-						assert.equal(displayNameErrorMessage.hidden, false);
-						done();
-					});
-
-			});
-			test('cancel display name button first close-edit-dashboard event', function(done) {
-				var dashboardEditor = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
-
-				element.addEventListener('close-edit-dashboard', function() {
-					assert.isOk('close-edit-dashboard event was fired');
-					done();
-				});
-
-				Polymer.dom(dashboardEditor).querySelector('#display-name-cancel-button').click();
-			});
-
-			test('When updating display name of dashboard at index 1, ensure user will see updated name', function(done) {
-				var expectedDisplayName = 'expectedDisplayName';
-				var dashboardIndexToUpdate = 1;
-				mockEditorContext(element, dashboardIndexToUpdate, Promise.resolve());
-
-				element._fetchDashboards().then(function() {
-					Polymer.dom.flush();
-
-					var dashboardEditor = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
-					Polymer.dom(dashboardEditor).querySelector('#display-name-input').value = expectedDisplayName;
-
-					element.addEventListener('close-edit-dashboard', function() {
+					function testEvent() {
 						Polymer.dom.flush();
-
 						var d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-dashboard-tile');
 						var updatedDashboard = d2lImageTiles[dashboardIndexToUpdate];
 
-						assert.equal(updatedDashboard._name, expectedDisplayName);
+						assert.equal(updatedDashboard._name, 'expectedDisplayName');
+						assert.equal(element._dashboardEditorHidden, true);
 						done();
-					});
+					}
 
-					Polymer.dom(dashboardEditor).querySelector('#display-name-update-button').click();
-				});
-			});
-
-			test('When trying to set display name of dashboard as an empty string user is informed it is not valid', function(done) {
-				var dashboardEditor = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
-				Polymer.dom(dashboardEditor).querySelector('#display-name-input').value = '';
-
-				element._updateButton()
-					.then(function() {
+					element._fetchDashboards().then(function() {
 						Polymer.dom.flush();
 
-						var dashboardEditor = Polymer.dom(element.root).querySelector('#dashboard-edit-overlay');
-						var displayNameInput = Polymer.dom(dashboardEditor).querySelector('#display-name-input');
-						assert.equal(displayNameInput.getAttribute('aria-invalid'), 'true');
-
-						var displayNameErrorTip = Polymer.dom(dashboardEditor).querySelector('#display-name-error-tip');
-						expect(displayNameErrorTip).to.not.equal(null);
-
-						done();
+						testEventBehavior(
+							element,
+							'dashboard-name-updated',
+							{
+								index: dashboardIndexToUpdate,
+								displayName: expectedDisplayName
+							},
+							testEvent
+						);
 					});
-			});
+				});
 		});
 	</script>
 </body>

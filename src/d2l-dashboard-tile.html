@@ -86,7 +86,7 @@
 				this.set('_imgUrl', imageUrl);
 			},
 			_changeDisplayName: function() {
-				this.fire('open-edit-dashboard', {
+				this.fire('dashboard-editor-opened', {
 					displayName: this._name,
 					index: this.index,
 					updateDisplayName: this._generateUpdateAction(this.dashboard.getActionByName('update-display-name')).bind(this)

@@ -1,13 +1,9 @@
 <link rel='import' href='../polymer/polymer.html'>
-<link rel="import" href="../d2l-alert/d2l-alert.html">
-<link rel="import" href="../d2l-button/d2l-button.html">
-<link rel="import" href="../d2l-colors/d2l-colors.html">
 <link rel="import" href="../d2l-fetch-siren-entity-behavior/d2l-fetch-siren-entity-behavior.html">
-<link rel="import" href="../d2l-simple-overlay/d2l-simple-overlay.html">
-<link rel="import" href="../d2l-text-input/d2l-text-input.html">
-<link rel="import" href="../d2l-tooltip/d2l-tooltip.html">
-<link rel="import" href="./src/d2l-dashboard-tile.html">
+
 <link rel="import" href="./localize-behavior.html">
+<link rel="import" href="./src/d2l-dashboard-editor.html">
+<link rel="import" href="./src/d2l-dashboard-tile.html">
 
 
 <dom-module id='d2l-my-dashboards'>
@@ -26,35 +22,13 @@
 				grid-template-columns: repeat(2, 1fr);
 				-ms-grid-columns: 1fr 15px 1fr;
 			}
-			d2l-tooltip {
-				--d2l-tooltip-background-color: var(--d2l-color-cinnabar);
-				--d2l-tooltip-border-color: var(--d2l-color-cinnabar);
-			}
-			d2l-button {
-				padding-top: 5px;
-				padding-right: 5px;
-			}
 		</style>
-		<d2l-simple-overlay
-			id="dashboard-edit-overlay"
-			title-name="[[localize('dashboardEditorTitle')]]"
-			close-simple-overlay-alt-text="close">
 
-			<div id='display-name-error' hidden>
-				<d2l-alert type="error">
-					[[localize('displayNameError')]]
-				</d2l-alert>
-			</div>
-			[[localize('dashboardDisplayNameLabel')]]
-			<d2l-text-input id='display-name-input' name="dashboardDisplayName" aria-invalid$="[[_boolToString(_invalidDisplayName)]]"></d2l-text-input>
-			<template is="dom-if" if="[[_invalidDisplayName]]">
-					<d2l-tooltip id="display-name-error-tip" for="display-name-input" position="top">[[localize('emptyValueError')]]</d2l-tooltip>
-			</template>
+		<d2l-dashboard-editor
+			hidden="[[_dashboardEditorHidden]]"
+			editor-context="[[_editorContext]]">
+		</d2l-dashboard-editor>
 
-			<d2l-button id='display-name-update-button' primary>[[localize('save')]]</d2l-button>
-			<d2l-button id='display-name-cancel-button'>[[localize('cancel')]]</d2l-button>
-
-		</d2l-simple-overlay>
 		<div class="dashboards-tile-grid columns-2">
 			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
 				<div class="dashboard-tile">
@@ -64,27 +38,27 @@
 					</d2l-dashboard-tile>
 				</div>
 			</template>
-	</div>
+		</div>
 	</template>
-	<script src="./src/ie-polyfills.js"></script> <!-- For IE11 -->
 
+	<script src="./src/ie-polyfills.js"></script> <!-- For IE11 -->
 	<script>
 		Polymer({
 			is: 'd2l-my-dashboards',
 			properties: {
+				dashboardsUrl: {
+					type: String
+				},
 				_dashboards: {
 					type: Array
 				},
-				dashboardsUrl: {
-					type: String
+				_dashboardEditorHidden: {
+					type: Boolean,
+					value: true
 				},
 				_editorContext: {
 					type: Object,
 					value: {}
-				},
-				_invalidDisplayName: {
-					type: Boolean,
-					value: false
 				}
 			},
 			behaviors: [
@@ -92,41 +66,20 @@
 				D2L.PolymerBehaviors.FetchSirenEntityBehavior
 			],
 			listeners: {
-				'd2l-simple-overlay-closed': '_resetEditDashboardView',
-				'open-edit-dashboard': '_onEditDashboardView',
-				'close-edit-dashboard': '_closeEditDashboardView'
+				'dashboard-editor-closed': '_closeEditDashboardView',
+				'dashboard-editor-opened': '_openEditDashboardView',
+				'dashboard-name-updated': '_updateDashboardName'
 			},
 			attached: function() {
 				Polymer.RenderStatus.afterNextRender(this, function() {
-					this._styleTilesForMs();
+					this._styleTilesForInternetExplorer();
 				});
-
-				var updateDisplayNameButton = Polymer.dom(this.root).querySelector('#display-name-update-button');
-				updateDisplayNameButton.addEventListener('click', this._updateButton.bind(this));
-
-				var cancelDisplayNameButton = Polymer.dom(this.root).querySelector('#display-name-cancel-button');
-				cancelDisplayNameButton.addEventListener('click', function() {
-					this.fire('close-edit-dashboard');
-				});
-			},
-			_boolToString: function(bool) {
-				return new Boolean(bool).toString();
 			},
 			ready: function() {
 				this._fetchDashboards();
 			},
-			_onEditDashboardView: function(e) {
-				var overlay = Polymer.dom(this.root).querySelector('#dashboard-edit-overlay');
-				var detail = e.detail ? e.detail : {};
-
-				this._editorContext = detail;
-
-				Polymer.dom(overlay).querySelector('#display-name-input').value = detail.displayName;
-				overlay.open();
-			},
 			_closeEditDashboardView: function() {
-				var overlay = Polymer.dom(this.root).querySelector('#dashboard-edit-overlay');
-				overlay.close();
+				this.set('_dashboardEditorHidden', true);
 			},
 			_fetchDashboards: function() {
 				return this._fetchEntity(this.dashboardsUrl)
@@ -140,9 +93,16 @@
 						this.set('_dashboards', dashboardEntities);
 					}.bind(this));
 			},
-			_styleTilesForMs: function() {
+			_openEditDashboardView: function(e) {
+				var editorContext = e.detail ? e.detail : {};
+
+				this.set('_editorContext', editorContext);
+				this.set('_dashboardEditorHidden', false);
+			},
+			_styleTilesForInternetExplorer: function() {
 				var numberOfColumns = 2;
 				var dashboardTileDivs = Polymer.dom(this.root).querySelectorAll('.dashboards-tile-grid > div');
+
 				for (var i = 0; i < dashboardTileDivs.length; i++) {
 					var div = dashboardTileDivs[i];
 					var column = (i % numberOfColumns + 1) * 2 - 1;
@@ -152,40 +112,15 @@
 					div.style['-ms-grid-row'] = row;
 				}
 			},
-			_resetEditDashboardView: function() {
-				var dashboardEditor = Polymer.dom(this.root).querySelector('#dashboard-edit-overlay');
-				var displayNameErrorMessage = Polymer.dom(dashboardEditor).querySelector('#display-name-error');
-				displayNameErrorMessage.setAttribute('hidden', '');
-
-				this.set('_invalidDisplayName', false);
-			},
-			_updateButton: function() {
-				var dashboardEditor = Polymer.dom(this.root).querySelector('#dashboard-edit-overlay');
-				var userInput = Polymer.dom(dashboardEditor).querySelector('#display-name-input');
-				var updatedDisplayName = userInput.value;
-
-				if (!updatedDisplayName) {
-					this.set('_invalidDisplayName', true);
-					return Promise.resolve();
-				}
-
-				var index = this._editorContext.index;
+			_updateDashboardName: function(e) {
+				var index = e.detail.index;
+				var updatedDisplayName = e.detail.displayName;
 				var dashboardToModify = this._dashboards[index];
 
-				return this._editorContext.updateDisplayName(updatedDisplayName)
-					.then(function() {
-						var updatedDashboard = Object.assign(Object.create(Object.getPrototypeOf(dashboardToModify)), dashboardToModify);
-						updatedDashboard.properties.name = updatedDisplayName;
+				var updatedDashboard = Object.assign(Object.create(Object.getPrototypeOf(dashboardToModify)), dashboardToModify);
+				updatedDashboard.properties.name = updatedDisplayName;
 
-						this.set('_dashboards.' + index, updatedDashboard);
-
-						this.fire('close-edit-dashboard');
-					}.bind(this))
-					.catch(function() {
-						var displayNameErrorMessage = Polymer.dom(dashboardEditor).querySelector('#display-name-error');
-						displayNameErrorMessage.removeAttribute('hidden');
-
-					}.bind(this));
+				this.set('_dashboards.' + index, updatedDashboard);
 			}
 		});
 	</script>
