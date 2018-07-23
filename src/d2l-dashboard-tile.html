@@ -39,6 +39,7 @@
 				<d2l-dropdown-menu slot="d2l-image-tile-dropdown">
 					<d2l-menu label="Options">
 						<d2l-menu-item
+							id='change-display-name-option'
 							text="[[localize('changeDisplayName')]]"
 							on-d2l-menu-item-select="_changeDisplayName" />
 					</d2l-menu>
@@ -78,6 +79,10 @@
 				this._configureDashboard();
 			},
 			_configureDashboard: function() {
+				if(!this.dashboard) {
+					return;
+				}
+
 				var imageEntity = this.dashboard.getSubEntityByRel('https://api.brightspace.com/rels/analytics-dashboard-image');
 				var imageUrl = imageEntity ? imageEntity.href : undefined;
 
@@ -86,7 +91,7 @@
 				this.set('_imgUrl', imageUrl);
 			},
 			_changeDisplayName: function() {
-				this.fire('open-edit-dashboard', {
+				this.fire('dashboard-editor-opened', {
 					displayName: this._name,
 					index: this.index,
 					updateDisplayName: this._generateUpdateAction(this.dashboard.getActionByName('update-display-name')).bind(this)
@@ -101,6 +106,7 @@
 						fields.forEach(function(field) {
 							body = body + encodeURIComponent(field.name) + '=' + encodeURIComponent(updatedDisplayName) + '&';
 						});
+
 						resolve(window.d2lfetch
 							.fetch(action.href, {
 								method: action.method,
