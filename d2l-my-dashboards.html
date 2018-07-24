@@ -9,6 +9,9 @@
 <dom-module id='d2l-my-dashboards'>
 	<template strip-whitespace>
 		<style>
+			:host {
+				display: block;
+			}
 			.dashboards-tile-grid {
 				display: -ms-grid;
 				display: grid;
@@ -22,6 +25,10 @@
 				grid-template-columns: repeat(2, 1fr);
 				-ms-grid-columns: 1fr 15px 1fr;
 			}
+			.dashboards-tile-grid.columns-1 {
+				grid-template-columns: 100%;
+				-ms-grid-columns: 100%;
+			}
 		</style>
 
 		<d2l-dashboard-editor
@@ -29,7 +36,7 @@
 			editor-context="[[_editorContext]]">
 		</d2l-dashboard-editor>
 
-		<div class="dashboards-tile-grid columns-2">
+		<div id="dashboard-tile-container" class="dashboards-tile-grid columns-2">
 			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
 				<div class="dashboard-tile">
 					<d2l-dashboard-tile
@@ -59,6 +66,11 @@
 				_editorContext: {
 					type: Object,
 					value: {}
+				},
+				_numberOfColumns: {
+					type: Number,
+					value: 2,
+					observer: '_styleTilesForInternetExplorer'
 				}
 			},
 			behaviors: [
@@ -72,7 +84,9 @@
 			},
 			attached: function() {
 				Polymer.RenderStatus.afterNextRender(this, function() {
+					this._onResize();
 					this._styleTilesForInternetExplorer();
+					window.addEventListener('resize', this._onResize.bind(this));
 				});
 			},
 			ready: function() {
@@ -93,6 +107,9 @@
 						this.set('_dashboards', dashboardEntities);
 					}.bind(this));
 			},
+			_getContainerWidth: function() {
+				return this.offsetWidth;
+			},
 			_openEditDashboardView: function(e) {
 				var editorContext = e.detail ? e.detail : {};
 
@@ -100,17 +117,31 @@
 				this.set('_dashboardEditorHidden', false);
 			},
 			_styleTilesForInternetExplorer: function() {
-				var numberOfColumns = 2;
 				var dashboardTileDivs = Polymer.dom(this.root).querySelectorAll('.dashboards-tile-grid > div');
 
 				for (var i = 0; i < dashboardTileDivs.length; i++) {
 					var div = dashboardTileDivs[i];
-					var column = (i % numberOfColumns + 1) * 2 - 1;
-					var row = Math.floor(i / numberOfColumns) + 1;
+					var column = (i % this._numberOfColumns + 1) * 2 - 1;
+					var row = Math.floor(i / this._numberOfColumns) + 1;
 
 					div.style['-ms-grid-column'] = column;
 					div.style['-ms-grid-row'] = row;
 				}
+			},
+			_onResize: function() {
+				var containerWidth = this._getContainerWidth();
+				var dashboardTileContainer = Polymer.dom(this.root).querySelector('#dashboard-tile-container');
+
+				var numColumns = Math.min(Math.floor(containerWidth / 350), 1) + 1;
+				var dashboardTileContainerClass = 'columns-' + numColumns;
+
+				if (dashboardTileContainer.classList.toString().indexOf(dashboardTileContainerClass) === -1) {
+					dashboardTileContainer.classList.remove('columns-1');
+					dashboardTileContainer.classList.remove('columns-2');
+					dashboardTileContainer.classList.add(dashboardTileContainerClass);
+				}
+
+				this.set('_numberOfColumns', numColumns);
 			},
 			_updateDashboardName: function(e) {
 				var index = e.detail.index;
