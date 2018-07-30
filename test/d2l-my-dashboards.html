@@ -233,13 +233,15 @@
 				element._getContainerWidth = sinon.stub();
 				element._getContainerWidth.returns(width);
 
+				var styleTileForIE = sandbox.spy(element, '_styleTilesForInternetExplorer');
+
 				function testNumberOfColumns() {
 					window.removeEventListener('resize', testNumberOfColumns);
 					setTimeout(() => {
 						var dashboardTileContainer = Polymer.dom(element.root).querySelector('#dashboard-tile-container');
 
-						assert.equal(element._numberOfColumns, size);
 						assert.include(dashboardTileContainer.classList.toString(), 'columns-' + size);
+						expect(styleTileForIE).to.have.been.called;
 
 						done();
 					}, 1000);
