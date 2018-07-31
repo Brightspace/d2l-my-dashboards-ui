@@ -17,6 +17,9 @@
 				display: grid;
 				grid-column-gap: 15px;
 			}
+			.dashboards-tile-grid-bottom-padding {
+				padding-bottom: 25px;
+			}
 			.dashboards-tile-grid.columns-3 {
 				grid-template-columns: repeat(3, 1fr);
 				-ms-grid-columns: 1fr 15px 1fr 15px 1fr;
@@ -36,7 +39,7 @@
 			editor-context="[[_editorContext]]">
 		</d2l-dashboard-editor>
 
-		<div id="dashboard-tile-container" class="dashboards-tile-grid columns-2">
+		<div id="dashboard-tile-container" class="dashboards-tile-grid dashboards-tile-grid-bottom-padding columns-2">
 			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
 				<div class="dashboard-tile">
 					<d2l-dashboard-tile
@@ -57,7 +60,8 @@
 					type: String
 				},
 				_dashboards: {
-					type: Array
+					type: Array,
+					observer: '_toggleGap'
 				},
 				_dashboardEditorHidden: {
 					type: Boolean,
@@ -66,11 +70,6 @@
 				_editorContext: {
 					type: Object,
 					value: {}
-				},
-				_numberOfColumns: {
-					type: Number,
-					value: 2,
-					observer: '_styleTilesForInternetExplorer'
 				}
 			},
 			behaviors: [
@@ -85,7 +84,6 @@
 			attached: function() {
 				Polymer.RenderStatus.afterNextRender(this, function() {
 					this._onResize();
-					this._styleTilesForInternetExplorer();
 					window.addEventListener('resize', this._onResize.bind(this));
 				});
 			},
@@ -110,19 +108,33 @@
 			_getContainerWidth: function() {
 				return this.offsetWidth;
 			},
+			_getDashboardTileDivs: function() {
+				return Polymer.dom(this.root).querySelectorAll('.dashboards-tile-grid > div');
+			},
 			_openEditDashboardView: function(e) {
 				var editorContext = e.detail ? e.detail : {};
 
 				this.set('_editorContext', editorContext);
 				this.set('_dashboardEditorHidden', false);
 			},
-			_styleTilesForInternetExplorer: function() {
-				var dashboardTileDivs = Polymer.dom(this.root).querySelectorAll('.dashboards-tile-grid > div');
+			_styleTilesForInternetExplorer: function(numberOfColumns, ie11retryCount) {
+				var dashboardTileDivs = this._getDashboardTileDivs();
+				if (
+					ie11retryCount < 10 &&
+					dashboardTileDivs.length === 0
+				) {
+					// If dashboard tiles haven't yet rendered, try again for up to one second
+					// (only happens sometimes in IE)
+					setTimeout(function() {
+						return this._styleTilesForInternetExplorer(numberOfColumns, ++ie11retryCount);
+					}.bind(this), 100);
+					return;
+				}
 
 				for (var i = 0; i < dashboardTileDivs.length; i++) {
 					var div = dashboardTileDivs[i];
-					var column = (i % this._numberOfColumns + 1) * 2 - 1;
-					var row = Math.floor(i / this._numberOfColumns) + 1;
+					var column = (i % numberOfColumns + 1) * 2 - 1;
+					var row = Math.floor(i / numberOfColumns) + 1;
 
 					div.style['-ms-grid-column'] = column;
 					div.style['-ms-grid-row'] = row;
@@ -141,7 +153,14 @@
 					dashboardTileContainer.classList.add(dashboardTileContainerClass);
 				}
 
-				this.set('_numberOfColumns', numColumns);
+				this._styleTilesForInternetExplorer(numColumns, 0);
+			},
+			_toggleGap: function() {
+				var dashboardTileContainer = Polymer.dom(this.root).querySelector('#dashboard-tile-container');
+				dashboardTileContainer.classList.remove('dashboards-tile-grid-bottom-padding');
+				if (this._dashboards && this._dashboards.length > 0) {
+					dashboardTileContainer.classList.add('dashboards-tile-grid-bottom-padding');
+				}
 			},
 			_updateDashboardName: function(e) {
 				var index = e.detail.index;

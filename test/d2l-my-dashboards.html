@@ -233,13 +233,15 @@
 				element._getContainerWidth = sinon.stub();
 				element._getContainerWidth.returns(width);
 
+				var styleTileForIE = sandbox.spy(element, '_styleTilesForInternetExplorer');
+
 				function testNumberOfColumns() {
 					window.removeEventListener('resize', testNumberOfColumns);
 					setTimeout(() => {
 						var dashboardTileContainer = Polymer.dom(element.root).querySelector('#dashboard-tile-container');
 
-						assert.equal(element._numberOfColumns, size);
 						assert.include(dashboardTileContainer.classList.toString(), 'columns-' + size);
+						expect(styleTileForIE).to.have.been.called;
 
 						done();
 					}, 1000);
@@ -253,6 +255,47 @@
 			});
 			test('when container width is greater than 350 ensure column length is 2 and container has class columns-2', function(done) {
 				testColumnSize(element, 2000, 2, done);
+			});
+
+			test('when failing to load dashboard tiles, retry a maximum of 10 times in less than 1.5 seconds', function(done) {
+				var styleTileForIE = sandbox.spy(element, '_styleTilesForInternetExplorer');
+
+				element._getDashboardTileDivs = sinon.stub();
+				element._getDashboardTileDivs.returns([]);
+
+				setTimeout(() => {
+					for (var i = 0; i <= 10; i++) {
+						sinon.assert.calledWith(styleTileForIE, 0, i);
+					}
+					sinon.assert.neverCalledWith(styleTileForIE, 0, 11);
+
+					done();
+				}, 1500);
+
+				element._styleTilesForInternetExplorer(0, 0);
+			});
+
+			test('when atleast one dashboard ensure bottom padding is applied', function() {
+				var dashboardTileContainer = Polymer.dom(element.root).querySelector('#dashboard-tile-container');
+
+				var mockDashboards = [{ getSubEntityByRel : function() {}, properties: {} }];
+				element.set('_dashboards', mockDashboards);
+
+				Polymer.dom.flush();
+				assert.include(
+					dashboardTileContainer.classList.toString(),
+					'dashboards-tile-grid-bottom-padding'
+				);
+			});
+
+			test('when no dashboards exist ensure bottom padding is not applied', function() {
+				var dashboardTileContainer = Polymer.dom(element.root).querySelector('#dashboard-tile-container');
+				element.set('_dashboards', []);
+				Polymer.dom.flush();
+				assert.notInclude(
+					dashboardTileContainer.classList.toString(),
+					'dashboards-tile-grid-bottom-padding'
+				);
 			});
 
 		});
