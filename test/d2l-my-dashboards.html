@@ -275,6 +275,29 @@
 				element._styleTilesForInternetExplorer(0, 0);
 			});
 
+			test('when atleast one dashboard ensure bottom padding is applied', function() {
+				var dashboardTileContainer = Polymer.dom(element.root).querySelector('#dashboard-tile-container');
+
+				var mockDashboards = [{ getSubEntityByRel : function() {}, properties: {} }];
+				element.set('_dashboards', mockDashboards);
+
+				Polymer.dom.flush();
+				assert.include(
+					dashboardTileContainer.classList.toString(),
+					'dashboards-tile-grid-bottom-padding'
+				);
+			});
+
+			test('when no dashboards exist ensure bottom padding is not applied', function() {
+				var dashboardTileContainer = Polymer.dom(element.root).querySelector('#dashboard-tile-container');
+				element.set('_dashboards', []);
+				Polymer.dom.flush();
+				assert.notInclude(
+					dashboardTileContainer.classList.toString(),
+					'dashboards-tile-grid-bottom-padding'
+				);
+			});
+
 		});
 	</script>
 </body>
