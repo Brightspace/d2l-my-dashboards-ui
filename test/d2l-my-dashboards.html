@@ -257,6 +257,24 @@
 				testColumnSize(element, 2000, 2, done);
 			});
 
+			test('when failing to load dashboard tiles, retry a maximum of 10 times in less than 1.5 seconds', function(done) {
+				var styleTileForIE = sandbox.spy(element, '_styleTilesForInternetExplorer');
+
+				element._getDashboardTileDivs = sinon.stub();
+				element._getDashboardTileDivs.returns([]);
+
+				setTimeout(() => {
+					for (var i = 0; i <= 10; i++) {
+						sinon.assert.calledWith(styleTileForIE, 0, i);
+					}
+					sinon.assert.neverCalledWith(styleTileForIE, 0, 11);
+
+					done();
+				}, 1500);
+
+				element._styleTilesForInternetExplorer(0, 0);
+			});
+
 		});
 	</script>
 </body>

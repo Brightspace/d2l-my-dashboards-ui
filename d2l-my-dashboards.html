@@ -105,6 +105,9 @@
 			_getContainerWidth: function() {
 				return this.offsetWidth;
 			},
+			_getDashboardTileDivs: function() {
+				return Polymer.dom(this.root).querySelectorAll('.dashboards-tile-grid > div');
+			},
 			_openEditDashboardView: function(e) {
 				var editorContext = e.detail ? e.detail : {};
 
@@ -112,14 +115,16 @@
 				this.set('_dashboardEditorHidden', false);
 			},
 			_styleTilesForInternetExplorer: function(numberOfColumns, ie11retryCount) {
-				var dashboardTileDivs = Polymer.dom(this.root).querySelectorAll('.dashboards-tile-grid > div');
+				var dashboardTileDivs = this._getDashboardTileDivs();
 				if (
 					ie11retryCount < 10 &&
 					dashboardTileDivs.length === 0
 				) {
 					// If dashboard tiles haven't yet rendered, try again for up to one second
 					// (only happens sometimes in IE)
-					setTimeout(this._styleTilesForInternetExplorer.bind(this, numberOfColumns, ++ie11retryCount), 100);
+					setTimeout(function() {
+						return this._styleTilesForInternetExplorer(numberOfColumns, ++ie11retryCount);
+					}.bind(this), 100);
 					return;
 				}
 
