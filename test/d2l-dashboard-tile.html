@@ -27,6 +27,7 @@
 		function createMockDashboard(
 			link,
 			name,
+			description,
 			imageLink,
 			actionInfo
 		) {
@@ -34,6 +35,7 @@
 				properties: {
 					link: link,
 					name: name,
+					description: description,
 				},
 				getSubEntityByRel: function() {
 					return { href: imageLink };
@@ -66,11 +68,13 @@
 			test('properties update correctly when dashboard updates', function() {
 				var expectedLink = 'expectedLink';
 				var expectedName = 'expectedName';
+				var expectedDescription = 'expectedDescription';
 				var expectedImageLink = 'expectedImageLink';
 
 				var mockDashboard = createMockDashboard(
 					expectedLink,
 					expectedName,
+					expectedDescription,
 					expectedImageLink,
 					'someActionLink'
 				);
@@ -78,6 +82,7 @@
 				element.set('dashboard', mockDashboard);
 				assert.equal(element._link, expectedLink);
 				assert.equal(element._name, expectedName);
+				assert.equal(element._description, expectedDescription);
 				assert.equal(element._imgUrl, expectedImageLink);
 			});
 
@@ -85,11 +90,13 @@
 			test('clicking the button to edit the dashboard fires correct event', function(done) {
 				var expectedLink = 'expectedLink';
 				var expectedName = 'expectedName';
+				var expectedDescription = 'expectedDescription';
 				var expectedActionInfo = 'expectedActionInfo';
 
 				var mockDashboard = createMockDashboard(
 					expectedLink,
 					expectedName,
+					expectedDescription,
 					'someImagelink',
 					expectedActionInfo
 				);
@@ -102,6 +109,7 @@
 
 				element.addEventListener('dashboard-editor-opened', function(e) {
 					assert.equal(e.detail.displayName, expectedName);
+					assert.equal(e.detail.description, expectedDescription);
 					assert.equal(e.detail.index, 0);
 					done();
 				});
