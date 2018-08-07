@@ -43,7 +43,7 @@ var mockedRoutes = {
     "properties": {
       "name": "DisplayName1",
       "link": "https://www.d2l.com/",
-	  "description": "The Adoption Dashboard visualizes key information around tool usage, logins & course access and enrollments"
+      "description": "The Adoption Dashboard visualizes key information around tool usage, logins & course access and enrollments"
     },
     "entities": [
       {
@@ -75,7 +75,7 @@ var mockedRoutes = {
     "properties": {
       "name": "DisplayName2",
       "link": "https://www.d2l.com/",
-	  "description": "The Dashboard visualizes test information"
+      "description": "The Engagement Dashboard visualizes actionable metrics such as discussion, assignments, content and course engagement"
     },
     "entities": [
       {
@@ -92,7 +92,8 @@ var mockedRoutes = {
   "https://tenant.analytics.api.dev.brightspace.com/dashboards/3": {
     "properties": {
       "name": "DisplayName3",
-      "link": "https://www.d2l.com/"
+      "link": "https://www.d2l.com/",
+      "description": "The Dashboard visualizes test information"
     },
     "entities": [
       {
