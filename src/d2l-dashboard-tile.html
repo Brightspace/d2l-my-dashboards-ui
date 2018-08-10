@@ -9,12 +9,25 @@
 	<template strip-whitespace>
 		<style>
 			.dashboard-text {
-				margin-top: 0.6rem;
-				float: left;
+				padding-top: 30px;
+				text-align: center;
 				flex: 1;
 				overflow: hidden;
 				word-wrap: break-word; /* IE/Edge */
 				overflow-wrap: break-word; /* replaces 'word-wrap' in Firefox, Chrome, Safari */
+				font-weight: bold;
+				font-size: 19px;
+			}
+			.dashboard-description {
+				padding-top: 10px;
+				padding-left: 24px;
+				padding-right: 24px;
+				padding-bottom: 30px;
+				text-align: left;
+				word-wrap: break-word; /* IE/Edge */
+				overflow-wrap: break-word; /* replaces 'word-wrap' in Firefox, Chrome, Safari */
+				line-height: 15px;
+				font-size: 14px;
 			}
 			d2l-image-tile:hover .dashboard-text {
 				text-decoration: underline;
@@ -45,8 +58,13 @@
 					</d2l-menu>
 				</d2l-dropdown-menu>
 
-				<div class="dashboard-text">
-					[[_name]]
+				<div class="dashboard-content">
+					<div class="dashboard-text">
+						[[_name]]
+					</div>
+					<div class="dashboard-description">
+						[[_description]]
+					</div>
 				</div>
 			</d2l-image-tile>
 		</div>
@@ -66,6 +84,9 @@
 					type: String
 				},
 				_name : {
+					type: String
+				},
+				_description : {
 					type: String
 				},
 				_imgUrl : {
@@ -88,11 +109,13 @@
 
 				this.set('_link', this.dashboard.properties.link);
 				this.set('_name', this.dashboard.properties.name);
+				this.set('_description', this.dashboard.properties.description);
 				this.set('_imgUrl', imageUrl);
 			},
 			_changeDisplayName: function() {
 				this.fire('dashboard-editor-opened', {
 					displayName: this._name,
+					description: this._description,
 					index: this.index,
 					updateDisplayName: this._generateUpdateAction(this.dashboard.getActionByName('update-display-name')).bind(this)
 				});

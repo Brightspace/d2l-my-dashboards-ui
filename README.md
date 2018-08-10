@@ -82,5 +82,5 @@ npm test
 
 [bower-url]: http://bower.io/search/?q=d2l-my-dashboards
 [bower-image]: https://badge.fury.io/bo/d2l-my-dashboards.svg
-[ci-url]: https://travis-ci.org/Brightspace/d2l-my-dashboards-ui
-[ci-image]: https://travis-ci.org/Brightspace/d2l-my-dashboards-ui.svg?branch=master
+[ci-url]: https://travis-ci.com/Brightspace/d2l-my-dashboards-ui
+[ci-image]: https://travis-ci.com/Brightspace/d2l-my-dashboards-ui.svg?branch=master

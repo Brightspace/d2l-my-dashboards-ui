@@ -20,6 +20,12 @@
 				padding-top: 5px;
 				padding-right: 5px;
 			}
+			.dashboard-description {
+				padding-top: 10px;
+				padding-bottom: 10px;
+				word-wrap: break-word; /* IE/Edge */
+				overflow-wrap: break-word; /* replaces 'word-wrap' in Firefox, Chrome, Safari */
+			}
 		</style>
 
 		<d2l-simple-overlay
@@ -42,6 +48,10 @@
 				name="dashboardDisplayName"
 				aria-invalid$="[[_boolToString(_invalidDisplayName)]]">
 			</d2l-text-input>
+
+			<div class="dashboard-description">
+				[[editorContext.description]]
+			</div>
 
 			<template is="dom-if" if="[[_invalidDisplayName]]">
 				<d2l-tooltip
