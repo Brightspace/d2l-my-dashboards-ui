@@ -53,7 +53,8 @@
 		var dashboardResponse1 = {
 			'properties': {
 				'name': 'DisplayName1',
-				'link': 'https://www.d2l.com/'
+				'link': 'https://www.d2l.com/',
+				'description': 'description1'
 			},
 			'entities': [
 				{
@@ -72,7 +73,8 @@
 		var dashboardResponse2 = {
 			'properties': {
 				'name': 'DisplayName2',
-				'link': 'https://www.d2l.com/'
+				'link': 'https://www.d2l.com/',
+				'description': 'description2'
 			},
 			'entities': [
 				{
@@ -147,11 +149,13 @@
 					var dashboard1 = d2lDashboardTiles[0];
 					assert.equal(dashboard1._link, dashboardResponse1.properties.link);
 					assert.equal(dashboard1._name, dashboardResponse1.properties.name);
+					assert.equal(dashboard1._description, dashboardResponse1.properties.description);
 					assert.equal(dashboard1._imgUrl, dashboardResponse1.entities[0].href);
 
 					var dashboard2 = d2lDashboardTiles[1];
 					assert.equal(dashboard2._link, dashboardResponse2.properties.link);
 					assert.equal(dashboard2._name, dashboardResponse2.properties.name);
+					assert.equal(dashboard2._description, dashboardResponse2.properties.description);
 					assert.equal(dashboard2._imgUrl, dashboardResponse2.entities[0].href);
 
 					done();
@@ -250,11 +254,14 @@
 				window.addEventListener('resize', testNumberOfColumns);
 				window.dispatchEvent(new Event('resize'));
 			}
-			test('when container width is less than 350 ensure column length is 1 and container has class columns-1', function(done) {
+			test('when container width is less than 385 ensure column length is 1 and container has class columns-1', function(done) {
 				testColumnSize(element, 200, 1, done);
 			});
-			test('when container width is greater than 350 ensure column length is 2 and container has class columns-2', function(done) {
-				testColumnSize(element, 2000, 2, done);
+			test('when container width is greater than 385 and less than 385*2 ensure column length is 2 and container has class columns-2', function(done) {
+				testColumnSize(element, 700, 2, done);
+			});
+			test('when container width is greater than 385*2 ensure column length is 3 and container has class columns-3', function(done) {
+				testColumnSize(element, 2000, 3, done);
 			});
 
 			test('when failing to load dashboard tiles, retry a maximum of 10 times in less than 1.5 seconds', function(done) {

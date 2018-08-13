@@ -39,7 +39,7 @@
 			editor-context="[[_editorContext]]">
 		</d2l-dashboard-editor>
 
-		<div id="dashboard-tile-container" class="dashboards-tile-grid dashboards-tile-grid-bottom-padding columns-2">
+		<div id="dashboard-tile-container" class="dashboards-tile-grid dashboards-tile-grid-bottom-padding columns-3">
 			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
 				<div class="dashboard-tile">
 					<d2l-dashboard-tile
@@ -144,12 +144,13 @@
 				var containerWidth = this._getContainerWidth();
 				var dashboardTileContainer = Polymer.dom(this.root).querySelector('#dashboard-tile-container');
 
-				var numColumns = Math.min(Math.floor(containerWidth / 350), 1) + 1;
+				var numColumns = Math.min(Math.floor(containerWidth / 385) + 1, 3);
 				var dashboardTileContainerClass = 'columns-' + numColumns;
 
 				if (dashboardTileContainer.classList.toString().indexOf(dashboardTileContainerClass) === -1) {
 					dashboardTileContainer.classList.remove('columns-1');
 					dashboardTileContainer.classList.remove('columns-2');
+					dashboardTileContainer.classList.remove('columns-3');
 					dashboardTileContainer.classList.add(dashboardTileContainerClass);
 				}
 
