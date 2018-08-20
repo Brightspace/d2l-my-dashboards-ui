@@ -82,22 +82,22 @@ npm test
 
 ## Publish updated version to LMS
 
-- 1) Merge changes into `d2l-my-dashbaords-ui`
-- 2) Publish new release of `d2l-my-dashbaords-ui`
-- 3) Create PR to publish/[bump](https://github.com/Brightspace/brightspace-integration/pull/928/files) `d2l-my-dashbaords-ui` in [BSI](https://github.com/Brightspace/brightspace-integration)
+- Merge changes into `d2l-my-dashbaords-ui`
+- Publish new release of `d2l-my-dashbaords-ui`
+- Create PR to publish/[bump](https://github.com/Brightspace/brightspace-integration/pull/928/files) `d2l-my-dashbaords-ui` in [BSI](https://github.com/Brightspace/brightspace-integration)
   * follow steps [here](https://github.com/Brightspace/brightspace-integration#bower-locking)
-- 4) Publish new release of [BSI](https://github.com/Brightspace/brightspace-integration)
-  * a) publish a release of BSI that contains latest `d2l-my-dashbaords-ui` with polymer version 1
-  * b) publish a pre-release of BSI that contains latest `d2l-my-dashbaords-ui` with polymer version 2 (see note below)
-- 5) Update LMS (*lp/_config/Infrastructure/D2L.LP.Web.UI.Html.Bsi.config.json*) to use the latest BSI
-  * a) update `daylight-polymer-1` with latest release of BSI with polymer version 1, [example PR](https://git.dev.d2l/projects/CORE/repos/lp/pull-requests/10442/diff)
-  * b) update `daylight-polymer-2` and `daylight-polymer-3` with latest pre-release pf BSI with polymer version 2 [example PR](https://git.dev.d2l/projects/CORE/repos/lp/pull-requests/10399/overview) (see note below)
+- Publish new release of [BSI](https://github.com/Brightspace/brightspace-integration)
+  * 4a) publish a release of BSI that contains latest `d2l-my-dashbaords-ui` with polymer version 1
+  * 4b) publish a pre-release of BSI that contains latest `d2l-my-dashbaords-ui` with polymer version 2 (see note below)
+- Update LMS (*lp/_config/Infrastructure/D2L.LP.Web.UI.Html.Bsi.config.json*) to use the latest BSI
+  * 5a) update `daylight-polymer-1` with latest release of BSI with polymer version 1, [example PR](https://git.dev.d2l/projects/CORE/repos/lp/pull-requests/10442/diff)
+  * 5b) update `daylight-polymer-2` and `daylight-polymer-3` with latest pre-release pf BSI with polymer version 2 [example PR](https://git.dev.d2l/projects/CORE/repos/lp/pull-requests/10399/overview) (see note below)
 - Update local LMS instance to use the latest BSI for **testing purpose**
   * edit *{your_instance}/config/Infrastructure/D2L.LP.Web.UI.Html.Bsi.config.json*
   * update `daylight-polymer-1` with latest release of BSI with polymer version 1
   * Restart IIS
 
-**Note**: polymer 2 only used in [testing](http://search.dev.d2l/source/xref/Lms/lp/framework/web/D2L.LP.Web.IntegrationTests/UI/Html/Bsi/BsiAssetVerificationTests.cs#40), the test only verify the web component with polymer 2 exists in BSI, and polymer 3 is still in a POC stage, so only have to update with polymer 2 &/ 3 (Step 4-b and 5-b) once when create a new web component.
+**Note**: polymer 2 only used in [testing](http://search.dev.d2l/source/xref/Lms/lp/framework/web/D2L.LP.Web.IntegrationTests/UI/Html/Bsi/BsiAssetVerificationTests.cs#40), the test only verify the web component with polymer 2 exists in BSI, and polymer 3 is still in a POC stage, so only have to update with polymer 2 &/ 3 (Step 4b and 5b) once when create a new web component.
 
 ## Testing changes on local LMS instance
 
