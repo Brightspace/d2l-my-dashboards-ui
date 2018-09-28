@@ -19,7 +19,7 @@
     "polymer": "Polymer/polymer#1 - 2",
     "d2l-alert": "^3.1.0",
     "d2l-button": "^4.5.1",
-    "d2l-card": "^4.1.14",
+    "d2l-card": "^4.1.15",
     "d2l-colors": "^3.1.2",
     "d2l-dropdown": "^6.1.0",
     "d2l-fetch": "Brightspace/d2l-fetch#^1.8.0",
