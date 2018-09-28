@@ -38,6 +38,9 @@
 				grid-template-columns: 100%;
 				-ms-grid-columns: 100%;
 			}
+			d2l-dashboard-tile {
+				width: 100%;
+			}
 		</style>
 
 		<d2l-dashboard-editor
@@ -47,11 +50,8 @@
 
 		<div id="dashboard-tile-container" class="dashboards-tile-grid dashboards-tile-grid-bottom-padding columns-3">
 			<template is='dom-repeat' id='listOfDashboards' items='[[_dashboards]]' as='dashboard'>
-				<div class="dashboard-tile">
-					<d2l-dashboard-tile
-						index="[[index]]"
-						dashboard="[[dashboard]]">
-					</d2l-dashboard-tile>
+				<div>
+					<d2l-dashboard-tile index="[[index]]" dashboard="[[dashboard]]"></d2l-dashboard-tile>
 				</div>
 			</template>
 		</div>
