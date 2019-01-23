@@ -117,7 +117,7 @@
 				updateDisplayNameButton.addEventListener('click', this._updateDashboardName.bind(this));
 
 				var cancelDisplayNameButton = Polymer.dom(this.root).querySelector('#display-name-cancel-button');
-				cancelDisplayNameButton.addEventListener('click', function() {
+				cancelDisplayNameButton.addEventListener('click', /* @this */ function() {
 					this.fire('dashboard-editor-closed');
 				});
 			},
@@ -129,12 +129,12 @@
 				overlay.close();
 			},
 			_resetEditDashboardView: function() {
-				this.set('_displayNameError', false)
+				this.set('_displayNameError', false);
 				this.set('_invalidDisplayName', false);
 				this.fire('dashboard-editor-closed');
 			},
-			_toggleVisibility: function(isHidden, qwe) {
-				if(isHidden === false) {
+			_toggleVisibility: function(isHidden) {
+				if (isHidden === false) {
 					var dashboardEditor = Polymer.dom(this.root).querySelector('#dashboard-edit-overlay');
 					Polymer.dom(dashboardEditor).querySelector('#display-name-input').value = this.editorContext.displayName;
 

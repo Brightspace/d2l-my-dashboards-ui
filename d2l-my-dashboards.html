@@ -87,7 +87,7 @@
 				'dashboard-name-updated': '_updateDashboardName'
 			},
 			attached: function() {
-				Polymer.RenderStatus.afterNextRender(this, function() {
+				Polymer.RenderStatus.afterNextRender(this, /* @this */ function() {
 					this._onResize();
 					window.addEventListener('resize', this._onResize.bind(this));
 				});

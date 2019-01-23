@@ -88,7 +88,7 @@
 				this._configureDashboard();
 			},
 			_configureDashboard: function() {
-				if(!this.dashboard) {
+				if (!this.dashboard) {
 					return;
 				}
 
@@ -110,7 +110,7 @@
 			},
 			_generateUpdateAction: function(action) {
 				return function(updatedDisplayName) {
-					return new Promise(function(resolve){
+					return new Promise(function(resolve) {
 						var fields = action.fields;
 						var body = '';
 
@@ -128,7 +128,7 @@
 							})
 						);
 					});
-				}
+				};
 			}
 		});
 	</script>
