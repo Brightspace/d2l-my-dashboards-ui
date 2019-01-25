@@ -114,12 +114,24 @@
 			},
 			attached: function() {
 				var updateDisplayNameButton = Polymer.dom(this.root).querySelector(this._const.updateButtonId);
-				updateDisplayNameButton.addEventListener('click', this._updateDashboardName.bind(this));
+				updateDisplayNameButton.addEventListener('click', this._boundUpdateDashboardName);
 
 				var cancelDisplayNameButton = Polymer.dom(this.root).querySelector('#display-name-cancel-button');
-				cancelDisplayNameButton.addEventListener('click', /* @this */ function() {
-					this.fire('dashboard-editor-closed');
-				});
+				cancelDisplayNameButton.addEventListener('click', this._boundFireClosed);
+			},
+			detached: function() {
+				var updateDisplayNameButton = Polymer.dom(this.root).querySelector(this._const.updateButtonId);
+				updateDisplayNameButton.removeEventListener('click', this._boundUpdateDashboardName);
+
+				var cancelDisplayNameButton = Polymer.dom(this.root).querySelector('#display-name-cancel-button');
+				cancelDisplayNameButton.removeEventListener('click', this._boundFireClosed);
+			},
+			ready: function() {
+				this._boundUpdateDashboardName = this._updateDashboardName.bind(this);
+				this._boundFireClosed = this._fireClosed.bind(this);
+			},
+			_fireClosed: function() {
+				this.fire('dashboard-editor-closed');
 			},
 			_boolToString: function(bool) {
 				return new Boolean(bool).toString();
