@@ -114,12 +114,24 @@
 			},
 			attached: function() {
 				var updateDisplayNameButton = Polymer.dom(this.root).querySelector(this._const.updateButtonId);
-				updateDisplayNameButton.addEventListener('click', this._updateDashboardName.bind(this));
+				updateDisplayNameButton.addEventListener('click', this._boundUpdateDashboardName);
 
 				var cancelDisplayNameButton = Polymer.dom(this.root).querySelector('#display-name-cancel-button');
-				cancelDisplayNameButton.addEventListener('click', function() {
-					this.fire('dashboard-editor-closed');
-				});
+				cancelDisplayNameButton.addEventListener('click', this._boundFireClosed);
+			},
+			detached: function() {
+				var updateDisplayNameButton = Polymer.dom(this.root).querySelector(this._const.updateButtonId);
+				updateDisplayNameButton.removeEventListener('click', this._boundUpdateDashboardName);
+
+				var cancelDisplayNameButton = Polymer.dom(this.root).querySelector('#display-name-cancel-button');
+				cancelDisplayNameButton.removeEventListener('click', this._boundFireClosed);
+			},
+			ready: function() {
+				this._boundUpdateDashboardName = this._updateDashboardName.bind(this);
+				this._boundFireClosed = this._fireClosed.bind(this);
+			},
+			_fireClosed: function() {
+				this.fire('dashboard-editor-closed');
 			},
 			_boolToString: function(bool) {
 				return new Boolean(bool).toString();
@@ -129,12 +141,12 @@
 				overlay.close();
 			},
 			_resetEditDashboardView: function() {
-				this.set('_displayNameError', false)
+				this.set('_displayNameError', false);
 				this.set('_invalidDisplayName', false);
 				this.fire('dashboard-editor-closed');
 			},
-			_toggleVisibility: function(isHidden, qwe) {
-				if(isHidden === false) {
+			_toggleVisibility: function(isHidden) {
+				if (isHidden === false) {
 					var dashboardEditor = Polymer.dom(this.root).querySelector('#dashboard-edit-overlay');
 					Polymer.dom(dashboardEditor).querySelector('#display-name-input').value = this.editorContext.displayName;
 

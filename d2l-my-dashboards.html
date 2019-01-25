@@ -87,12 +87,16 @@
 				'dashboard-name-updated': '_updateDashboardName'
 			},
 			attached: function() {
-				Polymer.RenderStatus.afterNextRender(this, function() {
+				window.addEventListener('resize', this._boundOnResize);
+				Polymer.RenderStatus.afterNextRender(this, /* @this */ function() {
 					this._onResize();
-					window.addEventListener('resize', this._onResize.bind(this));
 				});
 			},
+			detached: function() {
+				window.removeEventListener('resize', this._boundOnResize);
+			},
 			ready: function() {
+				this._boundOnResize = this._onResize.bind(this);
 				this._fetchDashboards();
 			},
 			_closeEditDashboardView: function() {
