@@ -1,0 +1,10 @@
+import '@polymer/polymer/polymer-legacy.js';
+window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms['zh'] = {
+	"dashboardEditorTitle": "编辑仪表板",
+	"dashboardDisplayNameLabel": "仪表板显示名称",
+	"save": "保存",
+	"cancel": "取消",
+	"changeDisplayName": "更改显示名称",
+	"displayNameError": "保存显示名称时出错",
+	"emptyValueError": "值不能为空。"
+};
