@@ -25,6 +25,7 @@
 	<script type="module">
 import '../d2l-my-dashboards.js';
 import { flush as flush$0, dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+import SirenParse from 'siren-parser';
 var dashboardUrl1 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/1';
 var dashboardUrl2 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/2';
 
@@ -120,13 +121,13 @@ suite('d2l-my-dashboards', function() {
 		element._fetchEntity = sinon.stub();
 		element._fetchEntity
 			.withArgs(sinon.match(dashboardUrl1))
-			.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardResponse1)));
+			.returns(Promise.resolve(SirenParse(dashboardResponse1)));
 		element._fetchEntity
 			.withArgs(sinon.match(dashboardUrl2))
-			.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardResponse2)));
+			.returns(Promise.resolve(SirenParse(dashboardResponse2)));
 		element._fetchEntity
 			.withArgs(sinon.match('https://tenant.analytics.api.dev.brightspace.com/dashboards'))
-			.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardsResponse)));
+			.returns(Promise.resolve(SirenParse(dashboardsResponse)));
 
 		flush(done);
 	});

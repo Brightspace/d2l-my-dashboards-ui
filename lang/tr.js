@@ -1,5 +1,5 @@
-import '@polymer/polymer/polymer-legacy.js';
-window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms['tr'] = {
+import "@polymer/polymer/polymer-legacy.js";
+window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms["tr"] = {
 	"dashboardEditorTitle": "Panoyu Düzenle",
 	"dashboardDisplayNameLabel": "Panoda Görünen Ad",
 	"save": "Kaydet",

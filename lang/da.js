@@ -1,5 +1,5 @@
-import '@polymer/polymer/polymer-legacy.js';
-window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms['da'] = {
+import "@polymer/polymer/polymer-legacy.js";
+window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms["da"] = {
 	"dashboardEditorTitle": "Rediger dashboard",
 	"dashboardDisplayNameLabel": "Dashboard-visningsnavn",
 	"save": "Gem",

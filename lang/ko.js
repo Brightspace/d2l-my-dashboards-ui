@@ -1,5 +1,5 @@
-import '@polymer/polymer/polymer-legacy.js';
-window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms['ko'] = {
+import "@polymer/polymer/polymer-legacy.js";
+window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms["ko"] = {
 	"dashboardEditorTitle": "대시보드 편집",
 	"dashboardDisplayNameLabel": "대시보드 표시 이름",
 	"save": "저장",

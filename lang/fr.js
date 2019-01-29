@@ -1,5 +1,5 @@
-import '@polymer/polymer/polymer-legacy.js';
-window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms['fr'] = {
+import "@polymer/polymer/polymer-legacy.js";
+window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms["fr"] = {
 	"dashboardEditorTitle": "Modifier le tableau de bord",
 	"dashboardDisplayNameLabel": "Nom d'affichage du tableau de bord",
 	"save": "Enregistrer",
