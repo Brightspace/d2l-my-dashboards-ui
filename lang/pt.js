@@ -1,0 +1,10 @@
+import "@polymer/polymer/polymer-legacy.js";
+window.D2L.PolymerBehaviors.AnalyticsDashboards.LangTerms["pt"] = {
+	"dashboardEditorTitle": "Editar painel",
+	"dashboardDisplayNameLabel": "Nome de exibição do painel",
+	"save": "Salvar",
+	"cancel": "Cancelar",
+	"changeDisplayName": "Alterar nome de exibição",
+	"displayNameError": "Erro ao salvar o nome de exibição",
+	"emptyValueError": "O valor não pode estar vazio"
+};

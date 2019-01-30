@@ -5,15 +5,15 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 	<title>d2l-my-dashboards test</title>
-	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+	<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
 
 	<!-- For IE11 -->
 	<script src="../../lie/dist/lie.polyfill.min.js"></script>
 	<!-- For IE11 -->
-	<script src="../../fetch/fetch.js"></script>
+	<script src="../../whatwg-fetch/fetch.js"></script>
 
-	<script src="../../web-component-tester/browser.js"></script>
-	<link rel="import" href="../d2l-my-dashboards.html">
+	<script src="../../wct-browser-legacy/browser.js"></script>
+	<script type="module" src="../d2l-my-dashboards.js"></script>
 </head>
 
 <body>
@@ -22,291 +22,294 @@
 			<d2l-my-dashboards dashboards-url="https://tenant.analytics.api.dev.brightspace.com/dashboards"></d2l-my-dashboards>
 		</template>
 	</test-fixture>
-	<script>
-		var dashboardUrl1 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/1';
-		var dashboardUrl2 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/2';
+	<script type="module">
+import '../d2l-my-dashboards.js';
+import { flush as flush$0, dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+import SirenParse from 'siren-parser';
+var dashboardUrl1 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/1';
+var dashboardUrl2 = 'https://tenant.analytics.api.dev.brightspace.com/dashboards/2';
 
-		var dashboardsResponse = {
-			'entities': [
-				{
-					'class': [
-						'dashboard'
-					],
-					'rel': [
-						'https://api.brightspace.com/rels/analytics-dashboards'
-					],
-					'href': dashboardUrl1
-				},
-				{
-					'class': [
-						'dashboard'
-					],
-					'rel': [
-						'https://api.brightspace.com/rels/analytics-dashboards'
-					],
-					'href': dashboardUrl2
-				}
-			]
+var dashboardsResponse = {
+	'entities': [
+		{
+			'class': [
+				'dashboard'
+			],
+			'rel': [
+				'https://api.brightspace.com/rels/analytics-dashboards'
+			],
+			'href': dashboardUrl1
+		},
+		{
+			'class': [
+				'dashboard'
+			],
+			'rel': [
+				'https://api.brightspace.com/rels/analytics-dashboards'
+			],
+			'href': dashboardUrl2
+		}
+	]
 
-		};
+};
 
-		var dashboardResponse1 = {
-			'properties': {
-				'name': 'DisplayName1',
-				'link': 'https://www.d2l.com/',
-				'description': 'description1'
-			},
-			'entities': [
-				{
-					'class': [
-						'anlytics-dashboard-image'
-					],
-					'rel': [
-						'https://api.brightspace.com/rels/analytics-dashboard-image'
-					],
-					'href': './static/dashboard_1.jpg'
-				},
-			]
+var dashboardResponse1 = {
+	'properties': {
+		'name': 'DisplayName1',
+		'link': 'https://www.d2l.com/',
+		'description': 'description1'
+	},
+	'entities': [
+		{
+			'class': [
+				'anlytics-dashboard-image'
+			],
+			'rel': [
+				'https://api.brightspace.com/rels/analytics-dashboard-image'
+			],
+			'href': './static/dashboard_1.jpg'
+		},
+	]
 
-		};
+};
 
-		var dashboardResponse2 = {
-			'properties': {
-				'name': 'DisplayName2',
-				'link': 'https://www.d2l.com/',
-				'description': 'description2'
-			},
-			'entities': [
-				{
-					'class': [
-						'anlytics-dashboard-image'
-					],
-					'rel': [
-						'https://api.brightspace.com/rels/analytics-dashboard-image'
-					],
-					'href': './static/dashboard_2.jpg'
-				},
-			]
-		};
+var dashboardResponse2 = {
+	'properties': {
+		'name': 'DisplayName2',
+		'link': 'https://www.d2l.com/',
+		'description': 'description2'
+	},
+	'entities': [
+		{
+			'class': [
+				'anlytics-dashboard-image'
+			],
+			'rel': [
+				'https://api.brightspace.com/rels/analytics-dashboard-image'
+			],
+			'href': './static/dashboard_2.jpg'
+		},
+	]
+};
 
-		function testEventBehavior(
-			element,
-			eventNameUnderTest,
-			detail,
-			runEventAssertions
-		) {
-			var event = new CustomEvent(
-				eventNameUnderTest,
-				{ detail: detail }
-			);
+function testEventBehavior(
+	element,
+	eventNameUnderTest,
+	detail,
+	runEventAssertions
+) {
+	var event = new CustomEvent(
+		eventNameUnderTest,
+		{ detail: detail }
+	);
 
-			element.addEventListener(eventNameUnderTest, function() {
-				runEventAssertions();
-			});
+	element.addEventListener(eventNameUnderTest, function() {
+		runEventAssertions();
+	});
 
-			element.dispatchEvent(event);
+	element.dispatchEvent(event);
+}
+
+suite('d2l-my-dashboards', function() {
+	var element;
+	var sandbox;
+
+	setup(function(done) {
+		sandbox = sinon.sandbox.create();
+		element = fixture('d2l-my-dashboards-fixture');
+
+		element._fetchEntity = sinon.stub();
+		element._fetchEntity
+			.withArgs(sinon.match(dashboardUrl1))
+			.returns(Promise.resolve(SirenParse(dashboardResponse1)));
+		element._fetchEntity
+			.withArgs(sinon.match(dashboardUrl2))
+			.returns(Promise.resolve(SirenParse(dashboardResponse2)));
+		element._fetchEntity
+			.withArgs(sinon.match('https://tenant.analytics.api.dev.brightspace.com/dashboards'))
+			.returns(Promise.resolve(SirenParse(dashboardsResponse)));
+
+		flush(done);
+	});
+
+	teardown(function() {
+		sandbox.restore();
+	});
+
+	test('is constructed with correct properties', function() {
+		assert.equal(element.is, 'd2l-my-dashboards');
+		assert.equal(element.dashboardsUrl, 'https://tenant.analytics.api.dev.brightspace.com/dashboards');
+		assert.equal(element._dashboardEditorHidden, true);
+	});
+
+	test('after fetching dashboards, the correct number of d2l-dashboard-tile elements are displayed', function(done) {
+		element._fetchDashboards().then(function() {
+			flush$0();
+
+			var d2lDashboardTiles = dom(element.root).querySelectorAll('d2l-dashboard-tile');
+			assert.equal(d2lDashboardTiles.length, 2);
+
+			var dashboard1 = d2lDashboardTiles[0];
+			assert.equal(dashboard1._link, dashboardResponse1.properties.link);
+			assert.equal(dashboard1._name, dashboardResponse1.properties.name);
+			assert.equal(dashboard1._description, dashboardResponse1.properties.description);
+			assert.equal(dashboard1._imgUrl, dashboardResponse1.entities[0].href);
+
+			var dashboard2 = d2lDashboardTiles[1];
+			assert.equal(dashboard2._link, dashboardResponse2.properties.link);
+			assert.equal(dashboard2._name, dashboardResponse2.properties.name);
+			assert.equal(dashboard2._description, dashboardResponse2.properties.description);
+			assert.equal(dashboard2._imgUrl, dashboardResponse2.entities[0].href);
+
+			done();
+		});
+	});
+
+	test('when dashboard-editor-opened event is received, properties are updated accordingly', function(done) {
+		var expectedEditorContext = { context: 'expectedEditorContext' };
+
+		function testEvent() {
+			assert.equal(element._dashboardEditorHidden, false);
+			assert.equal(element._editorContext, expectedEditorContext);
+			done();
 		}
 
-		suite('d2l-my-dashboards', function() {
-			var element;
-			var sandbox;
+		testEventBehavior(
+			element,
+			'dashboard-editor-opened',
+			expectedEditorContext,
+			testEvent
+		);
+	});
 
-			setup(function(done) {
-				sandbox = sinon.sandbox.create();
-				element = fixture('d2l-my-dashboards-fixture');
+	test('when dashboard-editor-closed event is received, properties are updated accordingly', function(done) {
+		function testEvent() {
+			assert.equal(element._dashboardEditorHidden, true);
+			done();
+		}
 
-				element._fetchEntity = sinon.stub();
-				element._fetchEntity
-					.withArgs(sinon.match(dashboardUrl1))
-					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardResponse1)));
-				element._fetchEntity
-					.withArgs(sinon.match(dashboardUrl2))
-					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardResponse2)));
-				element._fetchEntity
-					.withArgs(sinon.match('https://tenant.analytics.api.dev.brightspace.com/dashboards'))
-					.returns(Promise.resolve(window.D2L.Hypermedia.Siren.Parse(dashboardsResponse)));
+		// Set to false to ensure correct toggle
+		element._dashboardEditorHidden = false;
 
-				flush(done);
-			});
+		testEventBehavior(
+			element,
+			'dashboard-editor-closed',
+			{},
+			testEvent
+		);
+	});
 
-			teardown(function() {
-				sandbox.restore();
-			});
+	test(
+		'when dashboard-name-updated event is received, '
+		+ 'dashboard tile display name is updated', function(done) {
 
-			test('is constructed with correct properties', function() {
-				assert.equal(element.is, 'd2l-my-dashboards');
-				assert.equal(element.dashboardsUrl, 'https://tenant.analytics.api.dev.brightspace.com/dashboards');
+			var dashboardIndexToUpdate = 1;
+			var expectedDisplayName = 'expectedDisplayName';
+
+			function testEvent() {
+				flush$0();
+				var d2lImageTiles = dom(element.root).querySelectorAll('d2l-dashboard-tile');
+				var updatedDashboard = d2lImageTiles[dashboardIndexToUpdate];
+
+				assert.equal(updatedDashboard._name, 'expectedDisplayName');
 				assert.equal(element._dashboardEditorHidden, true);
-			});
-
-			test('after fetching dashboards, the correct number of d2l-dashboard-tile elements are displayed', function(done) {
-				element._fetchDashboards().then(function() {
-					Polymer.dom.flush();
-
-					var d2lDashboardTiles = Polymer.dom(element.root).querySelectorAll('d2l-dashboard-tile');
-					assert.equal(d2lDashboardTiles.length, 2);
-
-					var dashboard1 = d2lDashboardTiles[0];
-					assert.equal(dashboard1._link, dashboardResponse1.properties.link);
-					assert.equal(dashboard1._name, dashboardResponse1.properties.name);
-					assert.equal(dashboard1._description, dashboardResponse1.properties.description);
-					assert.equal(dashboard1._imgUrl, dashboardResponse1.entities[0].href);
-
-					var dashboard2 = d2lDashboardTiles[1];
-					assert.equal(dashboard2._link, dashboardResponse2.properties.link);
-					assert.equal(dashboard2._name, dashboardResponse2.properties.name);
-					assert.equal(dashboard2._description, dashboardResponse2.properties.description);
-					assert.equal(dashboard2._imgUrl, dashboardResponse2.entities[0].href);
-
-					done();
-				});
-			});
-
-			test('when dashboard-editor-opened event is received, properties are updated accordingly', function(done) {
-				var expectedEditorContext = { context: 'expectedEditorContext' };
-
-				function testEvent() {
-					assert.equal(element._dashboardEditorHidden, false);
-					assert.equal(element._editorContext, expectedEditorContext);
-					done();
-				}
-
-				testEventBehavior(
-					element,
-					'dashboard-editor-opened',
-					expectedEditorContext,
-					testEvent
-				);
-			});
-
-			test('when dashboard-editor-closed event is received, properties are updated accordingly', function(done) {
-				function testEvent() {
-					assert.equal(element._dashboardEditorHidden, true);
-					done();
-				}
-
-				// Set to false to ensure correct toggle
-				element._dashboardEditorHidden = false;
-
-				testEventBehavior(
-					element,
-					'dashboard-editor-closed',
-					{},
-					testEvent
-				);
-			});
-
-			test(
-				'when dashboard-name-updated event is received, '
-				+ 'dashboard tile display name is updated', function(done) {
-
-					var dashboardIndexToUpdate = 1;
-					var expectedDisplayName = 'expectedDisplayName';
-
-					function testEvent() {
-						Polymer.dom.flush();
-						var d2lImageTiles = Polymer.dom(element.root).querySelectorAll('d2l-dashboard-tile');
-						var updatedDashboard = d2lImageTiles[dashboardIndexToUpdate];
-
-						assert.equal(updatedDashboard._name, 'expectedDisplayName');
-						assert.equal(element._dashboardEditorHidden, true);
-						done();
-					}
-
-					element._fetchDashboards().then(function() {
-						Polymer.dom.flush();
-
-						testEventBehavior(
-							element,
-							'dashboard-name-updated',
-							{
-								index: dashboardIndexToUpdate,
-								displayName: expectedDisplayName
-							},
-							testEvent
-						);
-					});
-				});
-
-			function testColumnSize(
-				element,
-				width,
-				size,
-				done
-			) {
-				element._getContainerWidth = sinon.stub();
-				element._getContainerWidth.returns(width);
-
-				var styleTileForIE = sandbox.spy(element, '_styleTilesForInternetExplorer');
-
-				function testNumberOfColumns() {
-					window.removeEventListener('resize', testNumberOfColumns);
-					setTimeout(() => {
-						var dashboardTileContainer = Polymer.dom(element.root).querySelector('#dashboard-tile-container');
-
-						assert.include(dashboardTileContainer.classList.toString(), 'columns-' + size);
-						expect(styleTileForIE).to.have.been.called;
-
-						done();
-					}, 1000);
-				}
-
-				window.addEventListener('resize', testNumberOfColumns);
-				window.dispatchEvent(new Event('resize'));
+				done();
 			}
-			test('when container width is less than 385 ensure column length is 1 and container has class columns-1', function(done) {
-				testColumnSize(element, 200, 1, done);
-			});
-			test('when container width is greater than 385 and less than 385*2 ensure column length is 2 and container has class columns-2', function(done) {
-				testColumnSize(element, 700, 2, done);
-			});
-			test('when container width is greater than 385*2 ensure column length is 3 and container has class columns-3', function(done) {
-				testColumnSize(element, 2000, 3, done);
-			});
 
-			test('when failing to load dashboard tiles, retry a maximum of 10 times in less than 1.5 seconds', function(done) {
-				var styleTileForIE = sandbox.spy(element, '_styleTilesForInternetExplorer');
+			element._fetchDashboards().then(function() {
+				flush$0();
 
-				element._getDashboardTileDivs = sinon.stub();
-				element._getDashboardTileDivs.returns([]);
-
-				setTimeout(() => {
-					for (var i = 0; i <= 10; i++) {
-						sinon.assert.calledWith(styleTileForIE, 0, i);
-					}
-					sinon.assert.neverCalledWith(styleTileForIE, 0, 11);
-
-					done();
-				}, 1500);
-
-				element._styleTilesForInternetExplorer(0, 0);
-			});
-
-			test('when atleast one dashboard ensure bottom padding is applied', function() {
-				var dashboardTileContainer = Polymer.dom(element.root).querySelector('#dashboard-tile-container');
-
-				var mockDashboards = [{ getSubEntityByRel : function() {}, properties: {} }];
-				element.set('_dashboards', mockDashboards);
-
-				Polymer.dom.flush();
-				assert.include(
-					dashboardTileContainer.classList.toString(),
-					'dashboards-tile-grid-bottom-padding'
+				testEventBehavior(
+					element,
+					'dashboard-name-updated',
+					{
+						index: dashboardIndexToUpdate,
+						displayName: expectedDisplayName
+					},
+					testEvent
 				);
 			});
-
-			test('when no dashboards exist ensure bottom padding is not applied', function() {
-				var dashboardTileContainer = Polymer.dom(element.root).querySelector('#dashboard-tile-container');
-				element.set('_dashboards', []);
-				Polymer.dom.flush();
-				assert.notInclude(
-					dashboardTileContainer.classList.toString(),
-					'dashboards-tile-grid-bottom-padding'
-				);
-			});
-
 		});
-	</script>
+
+	function testColumnSize(
+		element,
+		width,
+		size,
+		done
+	) {
+		element._getContainerWidth = sinon.stub();
+		element._getContainerWidth.returns(width);
+
+		var styleTileForIE = sandbox.spy(element, '_styleTilesForInternetExplorer');
+
+		function testNumberOfColumns() {
+			window.removeEventListener('resize', testNumberOfColumns);
+			setTimeout(() => {
+				var dashboardTileContainer = dom(element.root).querySelector('#dashboard-tile-container');
+
+				assert.include(dashboardTileContainer.classList.toString(), 'columns-' + size);
+				expect(styleTileForIE).to.have.been.called;
+
+				done();
+			}, 1000);
+		}
+
+		window.addEventListener('resize', testNumberOfColumns);
+		window.dispatchEvent(new Event('resize'));
+	}
+	test('when container width is less than 385 ensure column length is 1 and container has class columns-1', function(done) {
+		testColumnSize(element, 200, 1, done);
+	});
+	test('when container width is greater than 385 and less than 385*2 ensure column length is 2 and container has class columns-2', function(done) {
+		testColumnSize(element, 700, 2, done);
+	});
+	test('when container width is greater than 385*2 ensure column length is 3 and container has class columns-3', function(done) {
+		testColumnSize(element, 2000, 3, done);
+	});
+
+	test('when failing to load dashboard tiles, retry a maximum of 10 times in less than 1.5 seconds', function(done) {
+		var styleTileForIE = sandbox.spy(element, '_styleTilesForInternetExplorer');
+
+		element._getDashboardTileDivs = sinon.stub();
+		element._getDashboardTileDivs.returns([]);
+
+		setTimeout(() => {
+			for (var i = 0; i <= 10; i++) {
+				sinon.assert.calledWith(styleTileForIE, 0, i);
+			}
+			sinon.assert.neverCalledWith(styleTileForIE, 0, 11);
+
+			done();
+		}, 1500);
+
+		element._styleTilesForInternetExplorer(0, 0);
+	});
+
+	test('when atleast one dashboard ensure bottom padding is applied', function() {
+		var dashboardTileContainer = dom(element.root).querySelector('#dashboard-tile-container');
+
+		var mockDashboards = [{ getSubEntityByRel : function() {}, properties: {} }];
+		element.set('_dashboards', mockDashboards);
+
+		flush$0();
+		assert.include(
+			dashboardTileContainer.classList.toString(),
+			'dashboards-tile-grid-bottom-padding'
+		);
+	});
+
+	test('when no dashboards exist ensure bottom padding is not applied', function() {
+		var dashboardTileContainer = dom(element.root).querySelector('#dashboard-tile-container');
+		element.set('_dashboards', []);
+		flush$0();
+		assert.notInclude(
+			dashboardTileContainer.classList.toString(),
+			'dashboards-tile-grid-bottom-padding'
+		);
+	});
+
+});
+</script>
 </body>
 
 </html>

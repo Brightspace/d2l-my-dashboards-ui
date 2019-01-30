@@ -1,3 +1,4 @@
+import 'd2l-fetch/d2l-fetch.js';
 
 function mockRoutes(mockedRoutes) {
 	window.d2lfetch = {
