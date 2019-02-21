@@ -3,11 +3,6 @@
 
 @demo demo/index.html
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
 import '@polymer/polymer/polymer-legacy.js';
 
 import 'd2l-card/d2l-card.js';
@@ -19,32 +14,54 @@ import 'd2l-menu/d2l-menu.js';
 import 'd2l-menu/d2l-menu-item.js';
 import '../localize-behavior.js';
 import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import '../../../node_modules/d2l-typography/d2l-typography.js';
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<dom-module id="d2l-dashboard-tile">
 	<template strip-whitespace="">
-		<style>
+		<style include="d2l-typography">
 			:host {
 				display: inline-block;
 			}
 			d2l-card {
 				width: 100%;
+				height: 100%;
 			}
 			.d2l-dashboard-tile-image {
-				object-fit: cover;
-				height: 125px;
+				background-position: left;
+				height: 107px;
 				width: 100%;
 			}
-			d2l-card-content-title {
-				text-align: center;
+			#card-title {
+				margin: 0;
+			}
+			.card-content {
+				padding: 6px 8px 6px 8px;
 			}
 			d2l-card-content-meta {
-				margin-top: 12px;
+				margin-top: 0.6rem;
+			}
+			.metric-list {
+				display: flex;
+				flex-flow: row wrap;
+			}
+			.metric {
+				flex-basis: 100%;
+			}
+			.metric-inner {
+				/* hanging indent */
+				padding-left: .95em;
+    			text-indent: -.95em;
+			}
+			@media all and (min-width: 1230px) {
+				.metric {
+					flex-basis: 50%;
+				}	
 			}
 		</style>
-		<d2l-card href="[[_link]]" text="[[_name]]">
+		<d2l-card href="[[_link]]" text="[[_name]]" subtle>
 
-			<img slot="header" alt="" class="d2l-dashboard-tile-image" src="[[_imgUrl]]">
+			<div slot="header" alt="" class="d2l-dashboard-tile-image" style$="background-image: url('[[_imgUrl]]')"></div>
 
 			<d2l-dropdown-more slot="actions" translucent="" visible-on-ancestor="" text="Options">
 				<d2l-dropdown-menu>
@@ -54,9 +71,14 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-dashboard-tile">
 				</d2l-dropdown-menu>
 			</d2l-dropdown-more>
 
-			<div slot="content">
-				<d2l-card-content-title>[[_name]]</d2l-card-content-title>
-				<d2l-card-content-meta>[[_description]]</d2l-card-content-meta>
+			<div slot="content" class="d2l-typography card-content">
+				<d2l-card-content-title class="d2l-heading-2" id="card-title">[[_name]]</d2l-card-content-title>
+				<d2l-card-content-meta class="d2l-body-compact">[[_description]]</d2l-card-content-meta>
+				<d2l-card-content-meta class="metric-list d2l-body-compact">
+					<template is="dom-repeat" id="listOfMetrics" items="[[_metrics]]" as="metric">
+						<div class="metric"><div class="metric-inner">• [[metric]]</div>	</div>			
+					</template>
+				</d2l-card-content-meta>
 			</div>
 
 		</d2l-card>
@@ -86,6 +108,9 @@ Polymer({
 		},
 		_imgUrl : {
 			type: String
+		},
+		_metrics: {
+			type: Array
 		}
 	},
 	behaviors: [
@@ -106,6 +131,7 @@ Polymer({
 		this.set('_name', this.dashboard.properties.name);
 		this.set('_description', this.dashboard.properties.description);
 		this.set('_imgUrl', imageUrl);
+		this.set('_metrics', this.dashboard.properties.metrics);
 	},
 	_changeDisplayName: function() {
 		this.fire('dashboard-editor-opened', {
