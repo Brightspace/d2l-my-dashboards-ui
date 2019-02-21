@@ -4,14 +4,12 @@ import './localize-behavior.js';
 import './src/d2l-dashboard-editor.js';
 import './src/d2l-dashboard-tile.js';
 import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
-import '../../node_modules/d2l-typography/d2l-typography.js';
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<dom-module id="d2l-my-dashboards">
 	<template strip-whitespace="">
-		<style include="d2l-typography">
+		<style>
 			:host {
 				display: block;
 			}
@@ -174,8 +172,8 @@ Polymer({
 		ie11retryCount = ie11retryCount || 0;
 		var dashboardTileDivs = this._getDashboardTileDivs();
 		var numberOfColumns = 1;
-		if(window.matchMedia('(min-width: 615px)').matches) numberOfColumns = 2;
-		if(window.matchMedia('(min-width: 924px)').matches) numberOfColumns = 3;
+		if (window.matchMedia('(min-width: 615px)').matches) numberOfColumns = 2;
+		if (window.matchMedia('(min-width: 924px)').matches) numberOfColumns = 3;
 
 		if (
 			ie11retryCount < 10 &&

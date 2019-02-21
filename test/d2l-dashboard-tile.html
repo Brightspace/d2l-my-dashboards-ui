@@ -30,13 +30,15 @@ function createMockDashboard(
 	name,
 	description,
 	imageLink,
-	actionInfo
+	actionInfo,
+	metrics
 ) {
 	return {
 		properties: {
 			link: link,
 			name: name,
 			description: description,
+			metrics: metrics,
 		},
 		getSubEntityByRel: function() {
 			return { href: imageLink };
@@ -71,13 +73,15 @@ suite('d2l-dashboard-tile', function() {
 		var expectedName = 'expectedName';
 		var expectedDescription = 'expectedDescription';
 		var expectedImageLink = 'expectedImageLink';
+		var expectedMetrics = ['metric1', 'metric2'];
 
 		var mockDashboard = createMockDashboard(
 			expectedLink,
 			expectedName,
 			expectedDescription,
 			expectedImageLink,
-			'someActionLink'
+			'someActionLink',
+			['metric1', 'metric2']
 		);
 
 		element.set('dashboard', mockDashboard);
@@ -85,6 +89,8 @@ suite('d2l-dashboard-tile', function() {
 		assert.equal(element._name, expectedName);
 		assert.equal(element._description, expectedDescription);
 		assert.equal(element._imgUrl, expectedImageLink);
+		assert.equal(element._metrics[0], expectedMetrics[0]);
+		assert.equal(element._metrics[1], expectedMetrics[1]);
 	});
 
 	// Test was flaky when actually trying to click the menu item so using _changeDisplayName directly
@@ -99,7 +105,8 @@ suite('d2l-dashboard-tile', function() {
 			expectedName,
 			expectedDescription,
 			'someImagelink',
-			expectedActionInfo
+			expectedActionInfo,
+			['metric1', 'metric2']
 		);
 
 		element._generateUpdateAction = function(actionInfo) {

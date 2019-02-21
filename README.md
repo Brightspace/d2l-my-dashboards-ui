@@ -62,6 +62,8 @@ To start a [local web server](https://www.polymer-project.org/3.0/docs/tools/pol
 polymer serve
 ```
 
+The demo page is [http://127.0.0.1:8081/components/d2l-my-dashboards/demo/](http://127.0.0.1:8081/components/d2l-my-dashboards/demo/)
+
 To lint ([eslint](http://eslint.org/) and [Polymer lint](https://www.polymer-project.org/3.0/docs/tools/polymer-cli-commands#lint)):
 
 ```shell

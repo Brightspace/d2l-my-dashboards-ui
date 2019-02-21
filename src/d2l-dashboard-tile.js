@@ -14,7 +14,7 @@ import 'd2l-menu/d2l-menu.js';
 import 'd2l-menu/d2l-menu-item.js';
 import '../localize-behavior.js';
 import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-import '../../../node_modules/d2l-typography/d2l-typography.js';
+import 'd2l-typography/d2l-typography.js';
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<dom-module id="d2l-dashboard-tile">
@@ -35,17 +35,17 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-dashboard-tile">
 			#card-title {
 				margin: 0;
 			}
-			.card-content {
+			.d2l-my-dashboards-card-content {
 				padding: 6px 8px 6px 8px;
 			}
 			d2l-card-content-meta {
 				margin-top: 0.6rem;
 			}
-			.metric-list {
+			.d2l-my-dashboards-metric-list {
 				display: flex;
 				flex-flow: row wrap;
 			}
-			.metric {
+			.d2l-my-dashboards-metric {
 				flex-basis: 100%;
 			}
 			.metric-inner {
@@ -71,12 +71,12 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-dashboard-tile">
 				</d2l-dropdown-menu>
 			</d2l-dropdown-more>
 
-			<div slot="content" class="d2l-typography card-content">
+			<div slot="content" class="d2l-typography d2l-my-dashboards-card-content">
 				<d2l-card-content-title class="d2l-heading-2" id="card-title">[[_name]]</d2l-card-content-title>
 				<d2l-card-content-meta class="d2l-body-compact">[[_description]]</d2l-card-content-meta>
-				<d2l-card-content-meta class="metric-list d2l-body-compact">
+				<d2l-card-content-meta class="d2l-my-dashboards-metric-list d2l-body-compact">
 					<template is="dom-repeat" id="listOfMetrics" items="[[_metrics]]" as="metric">
-						<div class="metric"><div class="metric-inner">• [[metric]]</div>	</div>			
+						<div class="d2l-my-dashboards-metric"><div class="metric-inner">• [[metric]]</div>	</div>			
 					</template>
 				</d2l-card-content-meta>
 			</div>
