@@ -62,6 +62,8 @@ To start a [local web server](https://www.polymer-project.org/3.0/docs/tools/pol
 polymer serve
 ```
 
+The demo page is [http://127.0.0.1:8081/components/d2l-my-dashboards/demo/](http://127.0.0.1:8081/components/d2l-my-dashboards/demo/)
+
 To lint ([eslint](http://eslint.org/) and [Polymer lint](https://www.polymer-project.org/3.0/docs/tools/polymer-cli-commands#lint)):
 
 ```shell
@@ -101,13 +103,14 @@ npm test
 
 ## Testing changes on local LMS instance
 
-- run local BSI
-  * go to `d2l-my-dashboards-ui` project directory with your local changes and run `bower link`
-  * go to BSI (`brightspace-integration`) project directory and run `bower link d2l-my-dashboards`
-  * run BSI locally `npm run serve`, get your local BSI i.e. `http://127.0.0.1:8080`
-- Point local LMS instance with local BSI
+1. In BSI (`brightspace-integration`), `rm package-lock.json; rm -rf node_modules; npm i` to get a clean BSI
+2. `npm link` in this project directory
+3. In BSI, `npm link d2l-my-dashboards`
+4. In BSI, `rm -rf node_modules/d2l-my-dashboards/node_modules`
+5. In BSI, `npm run serve`, and get your local BSI i.e. `http://127.0.0.1:8080`
+6. Point local LMS instance at local BSI
   * edit *{your_instance}/config/Infrastructure/D2L.LP.Web.UI.Html.Bsi.config.json*
-  * update `daylight-polymer-1` with your local BSI `http://127.0.0.1:8080`
+  * update `polymer-3` with your local BSI `http://127.0.0.1:8080/` or `http://{your machine name}:8080/`
   * Restart IIS
 
 
