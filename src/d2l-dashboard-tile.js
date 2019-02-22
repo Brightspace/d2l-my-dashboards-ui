@@ -48,13 +48,13 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-dashboard-tile">
 			.d2l-my-dashboards-metric {
 				flex-basis: 100%;
 			}
-			.metric-inner {
+			.d2l-my-dashboards-metric-inner {
 				/* hanging indent */
 				padding-left: .95em;
     			text-indent: -.95em;
 			}
 			@media all and (min-width: 1230px) {
-				.metric {
+				.d2l-my-dashboards-metric {
 					flex-basis: 50%;
 				}	
 			}
@@ -76,7 +76,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-dashboard-tile">
 				<d2l-card-content-meta class="d2l-body-compact">[[_description]]</d2l-card-content-meta>
 				<d2l-card-content-meta class="d2l-my-dashboards-metric-list d2l-body-compact">
 					<template is="dom-repeat" id="listOfMetrics" items="[[_metrics]]" as="metric">
-						<div class="d2l-my-dashboards-metric"><div class="metric-inner">• [[metric]]</div>	</div>			
+						<div class="d2l-my-dashboards-metric"><div class="d2l-my-dashboards-metric-inner">• [[metric]]</div>	</div>			
 					</template>
 				</d2l-card-content-meta>
 			</div>
