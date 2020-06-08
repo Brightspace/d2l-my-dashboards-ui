@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/BrightspaceUI/d2l-my-dashboards-ui.git"
   },
-  "version": "2.0.1",
+  "version": "3.0.3",
   "name": "d2l-my-dashboards",
   "scripts": {
     "lint": "npm run lint:wc && npm run lint:js",
