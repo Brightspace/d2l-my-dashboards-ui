@@ -50,7 +50,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-dashboard-editor">
 
 			[[localize('dashboardDisplayNameLabel')]]
 
-			<d2l-input-text id="display-name-input" name="dashboardDisplayName" aria-invalid$="[[_boolToString(_invalidDisplayName)]]">
+			<d2l-input-text id="display-name-input" name="dashboardDisplayName" aria-invalid$="[[_boolToString(_invalidDisplayName)]]" novalidate>
 			</d2l-input-text>
 
 			<div class="dashboard-description">
